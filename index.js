@@ -7,16 +7,15 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 // Put all API endpoints under '/api'
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
+app.get('/api/test', (req, res) => {
 
   // Generate some passwords
-  const passwords = {password: 'password'};
+  const test = {test: 'test'};
 
   // Return them as json
-  res.json(passwords);
+  res.json(test);
 
-  console.log(`Sent ${count} passwords`);
+  console.log(`Sent test`);
 });
 
 // The "catchall" handler: for any request that doesn't
@@ -28,4 +27,4 @@ app.get('*', (req, res) => {
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Server listening on ${port}`);
