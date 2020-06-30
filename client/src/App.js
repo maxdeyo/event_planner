@@ -5,13 +5,13 @@ class App extends Component {
   // Initialize state
   state = { test: 'null' }
 
-  // Fetch passwords after first mount
+  // Fetch data after first mount
   componentDidMount() {
     this.getData();
   }
 
   getData = () => {
-    // Get the passwords and store them in state
+    // Get the data and store them in state
     fetch('/api/test')
       .then(res => res.json())
       .then(test => this.setState({ test }));
@@ -22,8 +22,8 @@ class App extends Component {
 
     return (
       <div className="App">
-        {/* Render the passwords if we have them */}
-        {passwords!=null ? (
+        {/* Render the data if we have it */}
+        {test!=null ? (
           <div>
             <h1>{test.test}</h1>
           </div>
