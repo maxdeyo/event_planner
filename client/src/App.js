@@ -16,6 +16,9 @@ class App extends Component {
       .then(res => res.json())
       .then(test => this.setState({ test }));
   }
+  getFile = () => {
+    fetch('/files/bye.txt');
+  }
 
   render() {
     const { test } = this.state;
@@ -26,6 +29,11 @@ class App extends Component {
         {test!=null ? (
           <div>
             <h1>{test.test}</h1>
+            <a
+              href="http://localhost:5000/files/bye.txt"
+              download>
+              Download?
+            </a>
           </div>
         ) : (
           // Render a helpful message otherwise
@@ -33,7 +41,7 @@ class App extends Component {
             <h1>No data :(</h1>
             <button
               className="more"
-              onClick={this.getData}>
+              onClick={this.getFile}>
               Try Again?
             </button>
           </div>
