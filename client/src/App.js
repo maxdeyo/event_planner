@@ -30,7 +30,7 @@ class App extends Component {
           <div>
             <h1>{test.test}</h1>
             <a
-              href="http://localhost:5000/files/bye.txt"
+              href="http://localhost:5000/files/myfile.ics"
               download>
               Download?
             </a>
