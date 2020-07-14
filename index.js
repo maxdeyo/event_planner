@@ -1,10 +1,45 @@
+require('dotenv').config();
+
 const express = require('express');
 const path = require('path');
+const bodyParser= require('body-parser')
 
 const app = express();
 
+app.use(bodyParser.urlencoded({ extended: true }))
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
+
+const mongoose = require('mongoose');
+let uristring = process.env.MONGODB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/event_planner';
+
+mongoose.connect(uristring, function (err, res) {
+  if (err) {
+  console.log ('ERROR connecting to: ' + uristring + '. ' + err);
+  } else {
+  console.log ('Succeeded connected to: ' + uristring);
+  }
+});
+
+
+const Event = require('./models/event.model.js');
+const events = require('./controllers/event.controller.js');
+
+var johndoe = new Event ({
+      firstName: 'John',
+      lastName: 'Doe',
+      start: '7',
+      end: '8'
+    });
+
+    // Saving it to the database.
+    johndoe.save(function (err) {
+      if (err) {console.log ('Error on save!');}
+      else {console.log('John Doe Saved!');}
+    });
+
+//const db = mongoose.connection();
 
 // Put all API endpoints under '/api'
 app.get('/api/test', (req, res) => {
@@ -18,8 +53,16 @@ app.get('/api/test', (req, res) => {
   console.log(`Sent test`);
 });
 
-
-//let icsText = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//hacksw/handcal//NONSGML v1.0//EN\nBEGIN:VEVENT\nUID:uid1@example.com\nDTSTAMP:20200703T191855Z\nDTSTART:20200813T100000Z\nDTEND:20200813T130000Z\nSUMMARY:Study for exam\nLOCATION:Hamilton Library\nEND:VEVENT\nEND:VCALENDAR";
+let icsObj = {
+  version: 2.0,
+  event: 'VEVENT',
+  class: 'PUBLIC',
+  description: 'Study',
+  dtstart: '20200813T200000Z',
+  dtend:'20200813T230000Z',
+  location: 'Hamilton Library',
+  summary: ';LANGUAGE=en-us:Study for Exam',
+}
 
 let icsText = 'BEGIN:VCALENDAR' + '\n'
 +'VERSION:2.0' + '\n' + 
@@ -38,6 +81,9 @@ app.get('/files/:name',function(req,res){
     res.set({"Content-Disposition":"attachment; filename=\"myfile.ics\""});
     res.send(text[req.params.name]);
  });
+
+ app.post('/api/events/save', events.save);
+ app.get('/api/events/all', events.findAll);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

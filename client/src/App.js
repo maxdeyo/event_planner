@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 
+import FormTest from './FormTest';
+
 class App extends Component {
   // Initialize state
-  state = { test: 'null' }
+  state = { events: 'null' }
 
   // Fetch data after first mount
   componentDidMount() {
@@ -12,32 +14,34 @@ class App extends Component {
 
   getData = () => {
     // Get the data and store them in state
-    fetch('/api/test')
+    fetch('/api/events/all')
       .then(res => res.json())
-      .then(test => this.setState({ test }));
+      .then(events => this.setState({ events }));
   }
   getFile = () => {
     fetch('/files/myfile.ics');
   }
 
   render() {
-    const { test } = this.state;
+    const { events } = this.state;
 
     return (
       <div className="App">
         {/* Render the data if we have it */}
-        {test!=null ? (
+        {events!=null ? (
           <div>
-            <h1>{test.test}</h1>
+            <h1>{JSON.stringify(events.events)}</h1>
             <a
               href='/files/myfile.ics'
               download>
               Download?
             </a>
+            <FormTest />
           </div>
         ) : (
           // Render a helpful message otherwise
           <div>
+            <FormTest />
             <h1>No data :(</h1>
           </div>
         )}
