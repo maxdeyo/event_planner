@@ -5,7 +5,12 @@ import FormTest from './FormTest';
 
 class App extends Component {
   // Initialize state
-  state = { events: 'null' }
+  constructor(props){
+    super(props);
+    this.state = {
+      events: null
+    }
+  }
 
   // Fetch data after first mount
   componentDidMount() {
@@ -16,14 +21,13 @@ class App extends Component {
     // Get the data and store them in state
     fetch('/api/events/all')
       .then(res => res.json())
-      .then(events => this.setState({ events }));
+      .then(events => this.setState({ events: events }));
   }
   getFile = () => {
     fetch('/files/myfile.ics');
   }
 
   render() {
-    const { events } = this.state;
 
     return (
       <div className="App">

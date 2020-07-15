@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function FormTest() {
-    const [state, setState] = React.useState({
+    const [event, setEvent] = React.useState({
         name: 'name',
         description: 'desc',
         location: 'loc',
@@ -11,16 +11,18 @@ export default function FormTest() {
     });
     const handleInputChange = e => {
         const {name, value} = e.target
-        setState({...state, [name]: value})
+        setEvent({...event, [name]: value})
     }
 
     const handleSubmit = (e) =>{
         e.preventDefault();
          let databody = {
-             firstName: state.firstName,
-             lastName: state.lastName,
-             start: state.start,
-             end: state.end,
+            name: event.name,
+            description: event.description,
+            location: event.location,
+            dtstart: event.dtstart,
+            dtend: event.dtend,
+            summary: event.summary
          }
      
          fetch('/api/events/save', {
@@ -38,27 +40,27 @@ export default function FormTest() {
             <form>
                 <label>
                     Name:
-                    <input type="text" name="name" onChange={handleInputChange} value={state.name}/>
+                    <input type="text" name="name" onChange={handleInputChange} value={event.name}/>
                 </label>
                 <label>
                     Description:
-                    <input type="text" name="description" onChange={handleInputChange} value={state.description} />
+                    <input type="text" name="description" onChange={handleInputChange} value={event.description} />
                 </label>
                 <label>
                     Location:
-                    <input type="text" name="location" onChange={handleInputChange} value={state.location} />
+                    <input type="text" name="location" onChange={handleInputChange} value={event.location} />
                 </label>
                 <label>
                     Start:
-                    <input type="text" name="dtstart" onChange={handleInputChange} value={state.dtstart} />
+                    <input type="text" name="dtstart" onChange={handleInputChange} value={event.dtstart} />
                 </label>
                 <label>
                     End:
-                    <input type="text" name="dtend" onChange={handleInputChange} value={state.dtend} />
+                    <input type="text" name="dtend" onChange={handleInputChange} value={event.dtend} />
                 </label>
                 <label>
                     summary:
-                    <input type="text" name="summary" onChange={handleInputChange} value={state.summary} />
+                    <input type="text" name="summary" onChange={handleInputChange} value={event.summary} />
                 </label>
                 <input type="submit" value="Submit" onSubmit={handleSubmit}/>
             </form>
