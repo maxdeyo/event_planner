@@ -42,7 +42,7 @@ export default function FormTest() {
                 </label>
                 <label>
                     Description:
-                    <input type="text" name="lastName" onChange={handleInputChange} value={state.description} />
+                    <input type="text" name="description" onChange={handleInputChange} value={state.description} />
                 </label>
                 <label>
                     Location:
