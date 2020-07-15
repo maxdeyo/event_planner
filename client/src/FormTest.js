@@ -65,6 +65,7 @@ export default function FormTest() {
                 </label>
                 <input type="submit" value="Submit" onSubmit={handleSubmit}/>
             </form>
+            <button onClick={()=>handleSubmit} title='Click Me!' />
         </div>
     );
 }
