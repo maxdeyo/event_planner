@@ -14,7 +14,7 @@ exports.save = (req, res) => {
         summary: req.body.summary
     });
  
-    // Save a Customer in the MongoDB
+    // Save a Event in the MongoDB
     event.save()
     .then(data => {
         res.send(data);

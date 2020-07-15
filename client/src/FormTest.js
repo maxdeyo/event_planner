@@ -50,11 +50,11 @@ export default function FormTest() {
                 </label>
                 <label>
                     Start:
-                    <input type="text" name="start" onChange={handleInputChange} value={state.dtstart} />
+                    <input type="text" name="dtstart" onChange={handleInputChange} value={state.dtstart} />
                 </label>
                 <label>
                     End:
-                    <input type="text" name="end" onChange={handleInputChange} value={state.dtend} />
+                    <input type="text" name="dtend" onChange={handleInputChange} value={state.dtend} />
                 </label>
                 <label>
                     summary:
