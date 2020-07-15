@@ -2,10 +2,12 @@ import React from 'react';
 
 export default function FormTest() {
     const [state, setState] = React.useState({
-        firstName: 'John',
-        lastName: 'Smith',
-        start: '7',
-        end: '8'
+        name: 'name',
+        description: 'desc',
+        location: 'loc',
+        dtstart: 'start',
+        dtend: 'end',
+        summary: 'summary'
     });
     const handleInputChange = e => {
         const {name, value} = e.target
@@ -35,20 +37,28 @@ export default function FormTest() {
         <div>
             <form>
                 <label>
-                    First Name:
-                    <input type="text" name="firstName" onChange={handleInputChange} value={state.firstName}/>
+                    Name:
+                    <input type="text" name="name" onChange={handleInputChange} value={state.name}/>
                 </label>
                 <label>
-                    Last Name:
-                    <input type="text" name="lastName" onChange={handleInputChange} value={state.lastName} />
+                    Description:
+                    <input type="text" name="lastName" onChange={handleInputChange} value={state.description} />
+                </label>
+                <label>
+                    Location:
+                    <input type="text" name="location" onChange={handleInputChange} value={state.location} />
                 </label>
                 <label>
                     Start:
-                    <input type="text" name="start" onChange={handleInputChange} value={state.start} />
+                    <input type="text" name="start" onChange={handleInputChange} value={state.dtstart} />
                 </label>
                 <label>
                     End:
-                    <input type="text" name="end" onChange={handleInputChange} value={state.end} />
+                    <input type="text" name="end" onChange={handleInputChange} value={state.dtend} />
+                </label>
+                <label>
+                    summary:
+                    <input type="text" name="summary" onChange={handleInputChange} value={state.summary} />
                 </label>
                 <input type="submit" value="Submit" onSubmit={handleSubmit}/>
             </form>

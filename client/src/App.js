@@ -28,9 +28,9 @@ class App extends Component {
     return (
       <div className="App">
         {/* Render the data if we have it */}
-        {events!=null ? (
+        {this.state.events!=null ? (
           <div>
-            <h1>{JSON.stringify(events.events)}</h1>
+            <h1>{JSON.stringify(this.state.events)}</h1>
             <a
               href='/files/myfile.ics'
               download>
