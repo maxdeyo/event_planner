@@ -84,7 +84,24 @@ app.get('/files/:name',function(req,res){
     res.send(text[req.params.name]);
  });
 
- app.post('/api/events/save', events.save);
+ app.post('/api/events/save', function(req, res){
+  console.log('Post a User: ' + JSON.stringify(req.body));
+  
+    let event = new Event ({
+      name: req.body.name || "Untitled Note",
+      description: req.body.description || "Untitled Note",
+      location: req.body.location || "Untitled Note",
+      dtstart: req.body.dtstart || "Untitled Note",
+      dtend: req.body.dtend || "Untitled Note",
+      summary: req.body.summary || "Untitled Note"
+  });
+
+  // Saving it to the database.
+  event.save(function (err) {
+    if (err) {console.log ('Error on save!');}
+    else {console.log('John Doe Saved!');}
+  });
+ });
  app.get('/api/events/all', events.findAll);
 
 // The "catchall" handler: for any request that doesn't

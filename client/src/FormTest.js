@@ -29,7 +29,8 @@ export default function FormTest() {
                  method: 'POST',
                  body: JSON.stringify(databody),
                  headers: {
-                     'Content-Type': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                  },
              })
              .then(res => res.json())
