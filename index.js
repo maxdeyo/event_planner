@@ -88,12 +88,12 @@ app.get('/files/:name',function(req,res){
   console.log('Post a User: ' + JSON.stringify(req.body));
   
     let event = new Event ({
-      name: req.body.name || "Untitled Note",
-      description: req.body.description || "Untitled Note",
-      location: req.body.location || "Untitled Note",
-      dtstart: req.body.dtstart || "Untitled Note",
-      dtend: req.body.dtend || "Untitled Note",
-      summary: req.body.summary || "Untitled Note"
+      name:"Untitled Note",
+      description: "Untitled Note",
+      location:"Untitled Note",
+      dtstart:"Untitled Note",
+      dtend: "Untitled Note",
+      summary:"Untitled Note"
   });
 
   // Saving it to the database.
