@@ -27,12 +27,12 @@ const Event = require('./models/event.model.js');
 const events = require('./controllers/event.controller.js');
 
 var johndoe = new Event ({
-        name: 'name',
-        description: 'desc',
-        location: 'loc',
-        dtstart: 'start',
-        dtend: 'end',
-        summary: 'summary'
+        name: 'TEST',
+        description: 'TEST',
+        location: 'TESTloc',
+        dtstart: 'TESTstart',
+        dtend: 'TESTend',
+        summary: 'TESTsummary'
     });
 
     // Saving it to the database.

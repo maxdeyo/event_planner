@@ -5,13 +5,13 @@ exports.save = (req, res) => {
   console.log('Post a User: ' + JSON.stringify(req.body));
   
     // Create a Customer
-    const event = new Event({
-        name: req.body.name,
-        description: req.body.description,
-        location: req.body.location,
-        dtstart: req.body.dtstart,
-        dtend: req.body.dtend,
-        summary: req.body.summary
+    let event = new Event({
+        name: req.body.name || "Untitled Note",
+        description: req.body.description || "Untitled Note",
+        location: req.body.location || "Untitled Note",
+        dtstart: req.body.dtstart || "Untitled Note",
+        dtend: req.body.dtend || "Untitled Note",
+        summary: req.body.summary|| "Untitled Note"
     });
  
     // Save a Event in the MongoDB
