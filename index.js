@@ -26,21 +26,6 @@ mongoose.connect(uristring, function (err, res) {
 const Event = require('./models/event.model.js');
 const events = require('./controllers/event.controller.js');
 
-/*var johndoe = new Event ({
-        name: 'TEST',
-        description: 'TEST',
-        location: 'TESTloc',
-        dtstart: 'TESTstart',
-        dtend: 'TESTend',
-        summary: 'TESTsummary'
-    });
-
-    // Saving it to the database.
-    johndoe.save(function (err) {
-      if (err) {console.log ('Error on save!');}
-      else {console.log('John Doe Saved!');}
-    });*/
-
 // Put all API endpoints under '/api'
 app.get("/", (req, res) => {
   res.json({ status: "success", message: "Welcome To Testing API" });

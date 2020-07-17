@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.form {
+  width: 60%;
+  height:200px;
+  margin: 0 auto;
+  position: relative;
+  top: 20%;
+}
+
+.add-an-event-segment {
+   margin-top: -1px !important;
+}
+
+.ui.form .field>label {
+    margin-top: 20px;
+}
