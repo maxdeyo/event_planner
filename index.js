@@ -6,7 +6,7 @@ const bodyParser= require('body-parser')
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ useNewUrlParser: true, extended: true }))
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -26,7 +26,7 @@ mongoose.connect(uristring, function (err, res) {
 const Event = require('./models/event.model.js');
 const events = require('./controllers/event.controller.js');
 
-var johndoe = new Event ({
+/*var johndoe = new Event ({
         name: 'TEST',
         description: 'TEST',
         location: 'TESTloc',
@@ -39,11 +39,13 @@ var johndoe = new Event ({
     johndoe.save(function (err) {
       if (err) {console.log ('Error on save!');}
       else {console.log('John Doe Saved!');}
-    });
-
-//const db = mongoose.connection();
+    });*/
 
 // Put all API endpoints under '/api'
+app.get("/", (req, res) => {
+  res.json({ status: "success", message: "Welcome To Testing API" });
+});
+
 app.get('/api/test', (req, res) => {
 
   // Generate some passwords
@@ -114,3 +116,5 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Server listening on ${port}`);
+
+module.exports = app;
