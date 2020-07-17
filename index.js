@@ -26,7 +26,6 @@ mongoose.connect(uristring, function (err, res) {
 const Event = require('./models/event.model.js');
 const events = require('./controllers/event.controller.js');
 
-// Put all API endpoints under '/api'
 app.get("/", (req, res) => {
   res.json({ status: "success", message: "Welcome To Testing API" });
 });
