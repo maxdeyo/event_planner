@@ -9,7 +9,7 @@ class MyEvents extends Component {
     return (
       <div className="App">
         {/* Render the data if we have it */}
-        {this.props.name!=null ? (
+        {this.props.event!=null ? (
             <div>
               <Grid columns='equal'>
                 <Grid.Column>
