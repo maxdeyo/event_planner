@@ -4,9 +4,19 @@ import { Grid, Header } from 'semantic-ui-react'
 
 import "react-datepicker/dist/react-datepicker.css";
 
-function DateRange() {
+function DateRange(props) {
   const [startDate, setStartDate] = useState(0);
   const [endDate, setEndDate] = useState(0);
+
+  function handleStartChange(date){
+    setStartDate(date);
+    props.handleStartChange(date);
+  }
+  function handleEndChange(date){
+    setEndDate(date);
+    props.handleEndChange(date);
+  }
+
   return (
     <>
      <Grid columns='equal'>
@@ -14,7 +24,7 @@ function DateRange() {
       <Header as='h3'>Start Date</Header>
      <DatePicker
         selected={startDate}
-        onChange={date => setStartDate(date)}
+        onChange={date => handleStartChange(date)}
         showTimeSelect
         selectsStart
         startDate={startDate}
@@ -27,7 +37,7 @@ function DateRange() {
         <Header as='h3'>End Date</Header>
       <DatePicker
         selected={endDate}
-        onChange={date => setEndDate(date)}
+        onChange={date => handleEndChange(date)}
         showTimeSelect
         selectsEnd
         startDate={startDate}

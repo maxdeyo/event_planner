@@ -4,32 +4,61 @@ import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
 import './App.css';
 
+const axios = require('axios')
+
 class App extends Component {
   // Initialize state
   constructor(props){
     super(props);
     this.state = {
-      events: null
+      event: {
+        name: '',
+        description: '',
+        location: '',
+        dtstart: '',
+        dtend: '',
+        summary: ''
+      }
     }
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleStartChange = this.handleStartChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleInputChange = e => {
+    const name = e.target.name;
+    const value = e.target.value;
+    this.setState({event: {...this.state.event, [name]: value}})
   }
 
-  // Fetch data after first mount
-  componentDidMount() {
-    this.getData();
-  }
+  handleStartChange = startDate => {
+    this.setState({event: {...this.state.event, dtstart: startDate}})
+  };
+  handleEndChange = endDate => {
+    this.setState({event: {...this.state.event, dtend: endDate}})
+  };
+  handleSubmit = (e) =>{
+    e.preventDefault();
 
-  getData = () => {
-    // Get the data and store them in state
-    fetch('/api/events/all')
-      .then(res => res.json())
-      .then(events => this.setState({ events: events }));
-  }
-  getFile = () => {
-    fetch('/files/myfile.ics');
-  }
+    let databody = this.state.event;
+
+    const headers = { 'Content-Type': 'application/json' };
+
+    axios.post('/api/events/save', databody, { headers });
+ 
+     /*fetch('/api/events/save', {
+             method: 'POST',
+             body: databody,
+             headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+             },
+         })
+         .then(res => res.json())
+         .then(data => console.log(data));*/
+ }
 
   render() {
-    const { test } = this.state;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -38,6 +67,7 @@ class App extends Component {
             <Segment inverted color='black' size='huge' className='add-an-event-segment'>
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
+              <span>{JSON.stringify(this.state.event)}</span>
               <div class='form'>
               <Form size='huge'>
                 <Form.Field
@@ -45,10 +75,15 @@ class App extends Component {
                   control={Input}
                   label='Event Title'
                   placeholder='Event Title'
+                  name='name'
+                  onChange={this.handleInputChange}
                 />
                 <div class="calendar">
 
-                <Calendar />
+                <Calendar 
+                  handleStartChange={this.handleStartChange}
+                  handleEndChange={this.handleEndChange}
+                />
 
                   </div>
                 <Form.Field
@@ -57,18 +92,22 @@ class App extends Component {
                   control={TextArea}
                   label='Description'
                   placeholder='Description'
+                  name='description'
+                  onChange={this.handleInputChange}
                 />
                 <Form.Field
                   id='form-input-control-error-location'
                   control={TextArea}
                   label='Location'
                   placeholder='Location'
+                  name='location'
+                  onChange={this.handleInputChange}
                 />
-                <Form.Field
+                <Button
                   id='form-button-control-public'
-                  control={Button}
                   content='Create Event'
-                  label=''
+                  type='submit'
+                  onClick={this.handleSubmit}
                 />
               </Form>
           </div>

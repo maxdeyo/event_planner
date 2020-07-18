@@ -6,7 +6,8 @@ const bodyParser= require('body-parser')
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ useNewUrlParser: true, extended: true }))
+app.use(bodyParser.urlencoded({ useNewUrlParser: true, extended: true }));
+app.use(bodyParser.json());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -73,19 +74,19 @@ app.get('/files/:name',function(req,res){
  app.post('/api/events/save', function(req, res){
   console.log('Post a User: ' + JSON.stringify(req.body));
   
-    let event = new Event ({
-      name:"Untitled Note",
-      description: "Untitled Note",
-      location:"Untitled Note",
-      dtstart:"Untitled Note",
-      dtend: "Untitled Note",
-      summary:"Untitled Note"
-  });
+  let event = new Event({
+    name: req.body.name,
+    description: req.body.description,
+    location: req.body.location,
+    dtstart: req.body.dtstart,
+    dtend: req.body.dtend,
+    summary: req.body.summary
+});
 
   // Saving it to the database.
   event.save(function (err) {
     if (err) {console.log ('Error on save!');}
-    else {console.log('John Doe Saved!');}
+    else {console.log('Event Saved!');}
   });
  });
  app.get('/api/events/all', events.findAll);

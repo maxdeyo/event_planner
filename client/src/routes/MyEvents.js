@@ -66,9 +66,9 @@ class MyEvents extends Component {
              </Segment>
              {
                this.state.events!==null ? 
-                this.state.events.map((event)=>{
+                this.state.events.map((event, index)=>{
                   return (
-                    <Segment secondary>
+                    <Segment secondary={index%2===0 ? true : false}>
                       <EventCard event={event} />
                     </Segment>
                   )
