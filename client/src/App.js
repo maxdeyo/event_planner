@@ -45,17 +45,7 @@ class App extends Component {
     const headers = { 'Content-Type': 'application/json' };
 
     axios.post('/api/events/save', databody, { headers });
- 
-     /*fetch('/api/events/save', {
-             method: 'POST',
-             body: databody,
-             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-             },
-         })
-         .then(res => res.json())
-         .then(data => console.log(data));*/
+
  }
 
   render() {
@@ -67,7 +57,6 @@ class App extends Component {
             <Segment inverted color='black' size='huge' className='add-an-event-segment'>
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
-              <span>{JSON.stringify(this.state.event)}</span>
               <div class='form'>
               <Form size='huge'>
                 <Form.Field
