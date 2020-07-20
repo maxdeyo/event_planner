@@ -55,15 +55,6 @@ class MyEvents extends Component {
                 </Grid.Column>
               </Grid>
               <Segment.Group>
-              <Segment secondary>
-              <EventCard />
-              </Segment>
-             <Segment>
-              <EventCard />
-             </Segment>
-             <Segment secondary>
-              <EventCard />
-             </Segment>
              {
                this.state.events!==null ? 
                 this.state.events.map((event, index)=>{
@@ -72,7 +63,10 @@ class MyEvents extends Component {
                       <EventCard event={event} />
                     </Segment>
                   )
-                }) : <div />
+                }) : 
+                <Segment>
+                    <Header as='h4' textAlign='center'>No Events</Header>
+                </Segment>
              }
              </Segment.Group>
           </div>
