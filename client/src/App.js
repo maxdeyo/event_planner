@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
+import Autocomplete from './components/Autocomplete.js'
 import './App.css';
+/* global google */
 
 const axios = require('axios')
 
@@ -114,14 +116,7 @@ class App extends Component {
                   onChange={this.handleInputChange}
                   error={this.state.descriptionError}
                 />
-                <Form.Field
-                  id='form-input-control-error-location'
-                  control={TextArea}
-                  label='Location'
-                  placeholder='Location'
-                  name='location'
-                  onChange={this.handleInputChange}
-                />
+                <Autocomplete />
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'
