@@ -53,23 +53,27 @@ let icsObj = {
   summary: ';LANGUAGE=en-us:Study for Exam',
 }
 
-let icsText = 'BEGIN:VCALENDAR' + '\n'
-+'VERSION:2.0' + '\n' + 
-'BEGIN:VEVENT' + '\n' +
-'CLASS:PUBLIC' + '\n' +
-'DESCRIPTION:Study' + '\n' +
-'DTSTART:20200813T200000Z' + '\n' +
-'DTEND:20200813T230000Z' + '\n' +
-'LOCATION:Hamilton Library' + '\n' +
-'SUMMARY;LANGUAGE=en-us:Study for Exam' + '\n' +
-'END:VEVENT' + '\n' +
-'END:VCALENDAR';
+const icsText = (data) => {
+  let str = 'BEGIN:VCALENDAR' + '\n' +
+  'VERSION:2.0' + '\n' + 
+  'BEGIN:VEVENT' + '\n' + 
+  'CLASS:PUBLIC' + '\n' + 
+  'DESCRIPTION:' + data.name.toString() + '\n' +
+  'DTSTART:' + data.dtstart.toString() + '\n' +
+  'DTEND:' + data.dtend.toString() + '\n' +
+  'LOCATION:' + data.location.toString() + '\n' +
+  'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n' +
+  'END:VEVENT' + '\n' +
+  'END:VCALENDAR';
+  return str;
+}
 
-var text={"myfile.ics":icsText};
+var text={"myfile.ics":"This is a file!"};
 app.get('/files/:name',function(req,res){
     res.set({"Content-Disposition":"attachment; filename=\"myfile.ics\""});
-    res.send(text[req.params.name]);
+    res.send(text["myfile.ics"]);
  });
+ 
 
  app.post('/api/events/save', function(req, res){
   console.log('Post a User: ' + JSON.stringify(req.body));
@@ -90,6 +94,31 @@ app.get('/files/:name',function(req,res){
   });
  });
  app.get('/api/events/all', events.findAll);
+
+ app.get('/api/events/find/:id', function(req,res){
+   console.log('ID: '+req.params.id);
+ })
+
+ app.get('/api/events/download/:id', function(req, res){
+   console.log('ID: ' + req.params.id.toString());
+   res.set({"Content-Disposition":"attachment; filename=\""+req.params.id.toString()+".ics\""});
+   Event.findById(req.params.id, function (err, docs) { 
+    if (err){ 
+        console.log(err); 
+    } 
+    else{ 
+        console.log(JSON.stringify(docs));
+        let filePath = req.params.id.toString()+".ics";
+        res.send(icsText(docs));
+    } 
+}); 
+    res.download(icsText(docs));
+ })
+
+    app.get('/files/download', function(req, res) {
+      res.contentType('text/plain');
+      res.send('This is the content', { 'Content-Disposition': 'attachment; filename=name.txt' }); 
+    });
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.

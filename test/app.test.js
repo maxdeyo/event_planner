@@ -59,6 +59,23 @@ describe('Database Tests', function() {
         throw new Error('Should generate error!');
       });
     });
+    it('Dont save incorrect date to database', function(done) {
+      //Attempt to save with wrong info. An error should trigger
+      var wrongSave = {
+        name: 'Name',
+        description: 'Description',
+        location: 'Location',
+        dtstart: 'Start',
+        dtend: 'End',
+        summary: 'Summary'
+      };
+      var date = new Date(wrongSave.dtstart);
+      //if(date instanceof Date && !isNaN(date.valueOf()))
+      wrongSave.save(err => {
+        if(err) { return done(); }
+        throw new Error('Should generate error!');
+      });
+    });
   });
   //After all tests are finished drop database and close connection
   after(function(done){

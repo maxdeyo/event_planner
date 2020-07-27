@@ -1,9 +1,31 @@
 import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
 
+const FileSaver = require('file-saver');
+
+const icsText = (data) => {
+  let str = 'BEGIN:VCALENDAR' + '\n' +
+  'VERSION:2.0' + '\n' + 
+  'BEGIN:VEVENT' + '\n' + 
+  'CLASS:PUBLIC' + '\n' + 
+  'DESCRIPTION:' + data.name.toString() + '\n' +
+  'DTSTART:' + data.dtstart.toString() + '\n' +
+  'DTEND:' + data.dtend.toString() + '\n' +
+  'LOCATION:' + data.location.toString() + '\n' +
+  'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n' +
+  'END:VEVENT' + '\n' +
+  'END:VCALENDAR';
+  return str;
+}
+
 class MyEvents extends Component {
   constructor(props){
     super(props);
+    this.onTestSaveFile = this.onTestSaveFile.bind(this);
+  }
+  onTestSaveFile() {
+      let blob = new Blob([icsText(this.props.event)], {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(blob, this.props.event._id.toString() + ".ics");
   }
   render() {
     return (
@@ -25,7 +47,8 @@ class MyEvents extends Component {
                   {this.props.event.dtend}
                 </Grid.Column>
                 <Grid.Column>
-                 <Button secondary>View More</Button>
+                  <Button secondary onClick={this.onTestSaveFile}>Download</Button>
+                  <Button secondary>View More</Button>
                 </Grid.Column>
               </Grid>
           </div>
