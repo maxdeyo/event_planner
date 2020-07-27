@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, TextArea, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
 import './App.css';
@@ -17,7 +17,10 @@ class App extends Component {
         location: '',
         dtstart: '',
         dtend: '',
-        summary: ''
+        summary: '',
+        nameError: false,
+        descriptionError: false,
+        formError: false
       }
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -39,11 +42,28 @@ class App extends Component {
   };
   handleSubmit = (e) =>{
     e.preventDefault();
+    let error = false;
+    if (this.state.event.name.length < 25) {
+        this.setState({ nameError: true });
+        error = true;
+        } else {
+        this.setState({ nameError: false });
+        }
+    if (this.state.event.description.length < 100) {
+        this.setState({ descriptionError: true });
+        error = true;
+        } else {
+        this.setState({ descriptionError: false });
+        }
+    if (error) {
+        this.setState({ formError: true });
+        return; // prevent handleSubmit from executing
+    }
+
+    this.setState({ formError: false });
 
     let databody = this.state.event;
-
     const headers = { 'Content-Type': 'application/json' };
-
     axios.post('/api/events/save', databody, { headers });
 
  }
@@ -58,31 +78,41 @@ class App extends Component {
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
               <div class='form'>
-              <Form size='huge'>
-                <Form.Field
+              <Form
+                onSubmit={(event) => {this.handleSubmit(event);}}
+                error={this.state.formError}
+                size='huge'>
+                {this.state.formError
+                ?
+                <Message
+                error
+                header="Dwad"
+                content="AWD"/> : null}
+
+                <Form.Field required
                   id='form-textarea-control-event'
                   control={Input}
                   label='Event Title'
-                  placeholder='Event Title'
+                  placeholder='Event Title (25 characters max)'
                   name='name'
                   onChange={this.handleInputChange}
+                  error={this.state.nameError}
                 />
                 <div class="calendar">
-
                 <Calendar 
                   handleStartChange={this.handleStartChange}
                   handleEndChange={this.handleEndChange}
                 />
-
                   </div>
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
                   control={TextArea}
                   label='Description'
-                  placeholder='Description'
+                  placeholder='Description (100 characters max)'
                   name='description'
                   onChange={this.handleInputChange}
+                  error={this.state.descriptionError}
                 />
                 <Form.Field
                   id='form-input-control-error-location'
@@ -92,10 +122,15 @@ class App extends Component {
                   name='location'
                   onChange={this.handleInputChange}
                 />
-                <Button
+                <Form.Button
                   id='form-button-control-public'
                   content='Create Event'
                   type='submit'
+                  color='blue'
+                  disabled={!this.state.event.name
+                  || !this.state.event.dtstart
+                  || !this.state.event.dtend
+                  }
                   onClick={this.handleSubmit}
                 />
               </Form>
