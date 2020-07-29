@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
-import Autocomplete from './components/Autocomplete.js'
+import Autocomplete from './components/Autocomplete.js';
+import  RecurrenceModal from './components/RecurrenceModal.js'
+import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
 /* global google */
 
@@ -106,6 +108,7 @@ class App extends Component {
                   handleEndChange={this.handleEndChange}
                 />
                   </div>
+                 <RecurrenceModal />
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
@@ -117,11 +120,13 @@ class App extends Component {
                   error={this.state.descriptionError}
                 />
                 <Autocomplete />
+                <ExtraOptionsModal />
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'
                   type='submit'
                   color='blue'
+                  style={{ position: 'relative', width: '100%', padding: '15px', top: '-80px' }}
                   disabled={!this.state.event.name
                   || !this.state.event.dtstart
                   || !this.state.event.dtend

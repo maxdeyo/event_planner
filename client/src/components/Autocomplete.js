@@ -1,62 +1,47 @@
-import React, { Component } from "react";
-import { Search, Form, Header } from "semantic-ui-react";
+import React from 'react'
+import { Form, Input, Header } from 'semantic-ui-react'
+
 /* global google */
 
-const autocompleteService = new google.maps.places.AutocompleteService();
-
-export default class AutoComplete extends Component {
-  componentWillMount() {
-    this.resetComponent();
+class Autocomplete extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = null;
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.autocomplete = null
   }
 
-  resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: "" });
+  componentDidMount() {
+    this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
+  }
 
-  handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.title, selectedPlace: result });
+  handleChange(event) {
+    this.setState({[event.target.name]: event.target.value})
+  }
 
-  handleSearchChange = (e, { value }) => {
-    if (value.length === 0) {
-      return this.resetComponent();
-    }
-
-    this.setState({ isLoading: true, value });
-    autocompleteService.getPlacePredictions(
-      { input: value },
-      this.handleAutocompleteResult
-    );
-  };
-
-  handleAutocompleteResult = (predictions, status) => {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      this.setState({
-        isLoading: false,
-        results: predictions.map(prediction => {
-          return {
-            key: prediction.id,
-            title: prediction.structured_formatting.main_text,
-            description: prediction.structured_formatting.secondary_text,
-            source: prediction
-          };
-        })
-      });
-    }
-  };
+  handleSubmit(event) {
+    event.preventDefault()
+  }
 
   render() {
-    const { isLoading, value, results, selectedPlace } = this.state;
-
-    return (
-            <Search
-            loading={isLoading}
-            onResultSelect={this.handleResultSelect}
-            onSearchChange={debounce(this.handleSearchChange, 500, {
-              leading: true
-            })}
-            results={results}
-            value={value}
-            {...this.props}
-          />
-    );
+    return(
+      <div>
+        <Form size='huge' onSubmit={this.handleSubmit}>
+        <Form.Field
+            style={{ position: 'relative', width: '166%', right: '33%' }}
+            id='autocomplete'
+            label='Location'
+            control={Input}
+            name='input-field'
+            ref="input"
+            onChange={this.handleInputChange}
+            type="text"/>
+        </Form>
+      </div>
+    )
   }
+
 }
+
+export default Autocomplete;
