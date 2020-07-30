@@ -16,7 +16,7 @@ const icsText = (data) => {
   'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n' +
   'END:VEVENT' + '\n' +
   'END:VCALENDAR';
-  return str;
+   return str;
 }
 
 class MyEvents extends Component {
