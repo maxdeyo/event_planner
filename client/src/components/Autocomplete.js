@@ -1,5 +1,5 @@
-import React from 'react'
-import { Form, Input, Header } from 'semantic-ui-react'
+import React from 'react';
+import { Form, Input, Header } from 'semantic-ui-react';
 
 /* global google */
 
@@ -7,9 +7,9 @@ class Autocomplete extends React.Component {
   constructor(props) {
     super(props)
     this.state = null;
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.autocomplete = null
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.autocomplete = null;
   }
 
   componentDidMount() {

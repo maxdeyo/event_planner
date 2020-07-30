@@ -22,9 +22,11 @@ class App extends Component {
         dtstart: '',
         dtend: '',
         summary: '',
-        nameError: false,
-        descriptionError: false,
-        formError: false
+        recurrence: '',
+        tzid: '',
+        priority: '',
+        RSVP: '',
+        resources: ''
       }
     }
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -32,44 +34,27 @@ class App extends Component {
     this.handleEndChange = this.handleEndChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleInputChange = e => {
     const name = e.target.name;
     const value = e.target.value;
+    console.log(name);
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
   };
+
   handleEndChange = endDate => {
     this.setState({event: {...this.state.event, dtend: endDate}})
   };
+
   handleSubmit = (e) =>{
     e.preventDefault();
-    let error = false;
-    if (this.state.event.name.length < 25) {
-        this.setState({ nameError: true });
-        error = true;
-        } else {
-        this.setState({ nameError: false });
-        }
-    if (this.state.event.description.length < 100) {
-        this.setState({ descriptionError: true });
-        error = true;
-        } else {
-        this.setState({ descriptionError: false });
-        }
-    if (error) {
-        this.setState({ formError: true });
-        return; // prevent handleSubmit from executing
-    }
-
-    this.setState({ formError: false });
-
     let databody = this.state.event;
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
-
  }
 
   render() {
@@ -82,17 +67,7 @@ class App extends Component {
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
               <div class='form'>
-              <Form
-                onSubmit={(event) => {this.handleSubmit(event);}}
-                error={this.state.formError}
-                size='huge'>
-                {this.state.formError
-                ?
-                <Message
-                error
-                header="Dwad"
-                content="AWD"/> : null}
-
+              <Form size='huge'>
                 <Form.Field required
                   id='form-textarea-control-event'
                   control={Input}
@@ -100,7 +75,6 @@ class App extends Component {
                   placeholder='Event Title (25 characters max)'
                   name='name'
                   onChange={this.handleInputChange}
-                  error={this.state.nameError}
                 />
                 <div class="calendar">
                 <Calendar 
@@ -108,7 +82,8 @@ class App extends Component {
                   handleEndChange={this.handleEndChange}
                 />
                   </div>
-                 <RecurrenceModal />
+                 <RecurrenceModal
+                   onChange={this.handleInputChange}/>
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
@@ -117,10 +92,10 @@ class App extends Component {
                   placeholder='Description (100 characters max)'
                   name='description'
                   onChange={this.handleInputChange}
-                  error={this.state.descriptionError}
                 />
                 <Autocomplete />
-                <ExtraOptionsModal />
+                <ExtraOptionsModal
+                   onChange={this.handleInputChange} />
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'

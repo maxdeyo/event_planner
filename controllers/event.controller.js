@@ -11,7 +11,9 @@ exports.save = (req, res) => {
         location: req.body.location || "Untitled Note",
         dtstart: req.body.dtstart || "Untitled Note",
         dtend: req.body.dtend || "Untitled Note",
-        summary: req.body.summary|| "Untitled Note"
+        summary: req.body.summary|| "Untitled Note",
+        recurrence: req.body.recurrence|| "Untitled Note",
+        tzid: req.body.tzid|| "Untitled Note"
     });
  
     // Save a Event in the MongoDB

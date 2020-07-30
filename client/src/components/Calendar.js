@@ -33,6 +33,7 @@ class Calendar extends Component {
     });
     this.props.handleStartChange(startDate);
   };
+
   handleEndChange = endDate => {
     this.setState({
       endDate

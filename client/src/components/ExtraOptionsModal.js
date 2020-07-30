@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes } from 'react';
 import ReactDOM from "react-dom";
 import TimeZones from '../data/timezones.js';
 import { Form, Input, Modal, Button, Header } from 'semantic-ui-react';
@@ -10,26 +10,35 @@ const priorityOptions = [
   { key: 'm', text: 'Medium', value: '4' },
 ];
 
-const options = TimeZones.map(({ ID, Timezone }) => ({ value: ID, text: Timezone }))
-
 class ExtraOptionsModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-        open: false,
-         };
+    open: false,
+    extraPriority: '',
+    extraTzid: '',
+    extraResources: '',
+    extraRSVP: ''
+    };
+      this.handleChange = this.handleChange.bind(this);
     }
+
+   handleSubmit(e) {
+    e.preventDefault();
+   }
 
   closeConfigShow = (closeOnEscape) => () => {
     this.setState({ closeOnEscape, open: true })
   }
 
-  handleChange = (e, option) => {
-    let value = TimeZones.value;
-    this.setState({ selected: {value}})
-  }
-
   close = () => this.setState({ open: false })
+
+    handleChange = extraResources => {
+      this.setState({
+        extraResources
+      });
+    };
+
 
   render() {
     const { open, closeOnEscape } = this.state;
@@ -56,22 +65,21 @@ class ExtraOptionsModal extends React.Component {
               />
               <Form.Select
                 fluid
-                selection
                 search
-                id='timezoneoptions'
                 label='Time Zone'
-                options={options}
-                onClick={this.handleChange}
+                options={TimeZones}
+                onChange={extraResources => this.handleChange()}
                 placeholder='Time Zone'
               />
             </Form.Group>
-            <Form.TextArea label='Resources' placeholder='Equipment/Resources to bring' />
+            <Form.TextArea label='Resources'
+                placeholder='Equipment/Resources to bring' />
             <Form.Checkbox label='Check to request RSVP' />
           </Modal.Content>
           <Modal.Actions>
             <Form.Button
               type='submit'
-              onClick={this.close}
+              onClick= {this.close}
               positive
               labelPosition='right'
               icon='checkmark'

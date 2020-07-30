@@ -9,8 +9,9 @@ const icsText = (data) => {
   'BEGIN:VEVENT' + '\n' + 
   'CLASS:PUBLIC' + '\n' + 
   'DESCRIPTION:' + data.name.toString() + '\n' +
-  'DTSTART:' + data.dtstart.toString() + '\n' +
-  'DTEND:' + data.dtend.toString() + '\n' +
+  'DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
+  'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n' +
+  'RRULE:FREQ=' + data.recurrence.toString() + '\n' +
   'LOCATION:' + data.location.toString() + '\n' +
   'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n' +
   'END:VEVENT' + '\n' +

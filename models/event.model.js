@@ -5,7 +5,9 @@ let eventSchema = mongoose.Schema({
     location: String,
     dtstart: String,
     dtend: String,
-    summary: String
+    summary: String,
+    recurrence: String,
+    tzid: String
 });
 
 module.exports = mongoose.model("Event", eventSchema, "events");

@@ -3,14 +3,20 @@ import { Form } from 'semantic-ui-react'
 
 const recurrenceOptions = [
   { key: 'af', value: 'af', text: 'Daily' },
-  { key: 'ax', value: 'ax', text: 'Aland Weekly' },
+  { key: 'ax', value: 'ax', text: 'Weekly' },
   { key: 'al', value: 'al', text: 'Monthly' },
   { key: 'dz', value: 'dz', text: 'Annually' },
-  { key: 'as', value: 'as', text: 'Custom...' },
+  //{ key: 'as', value: 'as', text: 'Custom...' },
 ]
 
 class RecurrenceModal extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+    recurrenceModal: '',
+    };
 
+    }
   render() {
     return (
       <Form.Select
