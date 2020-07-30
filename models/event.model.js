@@ -7,7 +7,9 @@ let eventSchema = mongoose.Schema({
     dtend: String,
     summary: String,
     recurrence: String,
-    tzid: String
+    tzid: String,
+    priority: String,
+    resources: String
 });
 
 module.exports = mongoose.model("Event", eventSchema, "events");
