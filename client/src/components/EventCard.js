@@ -14,8 +14,6 @@ const icsText = (data) => {
   'RRULE:FREQ=' + data.recurrence.toString() + '\n' +
   'LOCATION:' + data.location.toString() + '\n' +
   'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n' +
-  'RESOURCES:' + data.resources.toString() + '\n' +
-  'PRIORITY:' + data.priority.toString() + '\n' +
   'END:VEVENT' + '\n' +
   'END:VCALENDAR';
    return str;

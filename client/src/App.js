@@ -31,9 +31,6 @@ class App extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
-    this.handlePriorityChange = this.handlePriorityChange.bind(this);
-    this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
-    this.handleResourceChange = this.handleResourceChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -51,18 +48,6 @@ class App extends Component {
     this.setState({event: {...this.state.event, dtend: endDate}})
   };
 
-  handlePriorityChange = endDate => {
-    this.setState({event: {...this.state.event, priority: extraPriority}})
-  };
-
-  handleResourceChange = extraResources => {
-    this.setState({event: {...this.state.event, resources: extraResources}})
-  };
-  handleTimeZoneChange = extraTzid => {
-    this.setState({event: {...this.state.event, tzid: extraTzid}})
-  }
-
-  handle
   handleSubmit = (e) =>{
     e.preventDefault();
     let databody = this.state.event;
@@ -108,10 +93,7 @@ class App extends Component {
                 />
                 <Autocomplete />
                 <ExtraOptionsModal
-                   handlePriorityChange={this.handlePriorityChange}
-                   handleResourceChange={this.handleResourceChange}
-                   handleTimeZoneChange={this.handleTimeZoneChange}
-                 />
+                   onChange={this.handleInputChange} />
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'

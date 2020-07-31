@@ -13,9 +13,7 @@ exports.save = (req, res) => {
         dtend: req.body.dtend || "Untitled Note",
         summary: req.body.summary|| "Untitled Note",
         recurrence: req.body.recurrence|| "Untitled Note",
-        tzid: req.body.tzid|| "Untitled Note",
-        resources: req.body.resources|| "Untitled Note",
-        priority: req.body.priority|| "Untitled Note"
+        tzid: req.body.tzid|| "Untitled Note"
     });
  
     // Save a Event in the MongoDB
