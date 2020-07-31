@@ -24,8 +24,11 @@ class MyEvents extends Component {
     // Get the data and store them in state
     fetch('/api/events/all')
       .then(res => res.json())
-      .then(events => this.setState({ events: events }));
+      .then(events => this.setState({ events: events }))
+      .catch( error => console.error(error));
   }
+
+
   getFile = () => {
     fetch('/files/myfile.ics');
   }
