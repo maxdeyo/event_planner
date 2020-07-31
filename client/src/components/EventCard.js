@@ -66,7 +66,6 @@ class MyEvents extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Button secondary onClick={this.onTestSaveFile}>Download</Button>
-                  <Button secondary>View More</Button>
                 </Grid.Column>
               </Grid>
           </div>
