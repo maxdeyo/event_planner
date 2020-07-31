@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
 
-const axios = require('axios');
 const FileSaver = require('file-saver');
 
 const icsText = (data) => {
@@ -46,22 +45,6 @@ class MyEvents extends Component {
       let blob = new Blob([icsText(this.props.event)], {type: "text/plain;charset=utf-8"});
       FileSaver.saveAs(blob, this.props.event._id.toString() + ".ics");
   }
-
-    deleteEvent(id) {
-        // Issue DELETE request
-        axios.delete(`/api/events/delete/${id}`)
-          .then(() => {
-              // Issue GET request after item deleted to get updated list
-              // that excludes user of id
-              return axios.get(`/api/events/all`)
-          })
-          .then(res => {
-              // Update events in state as per-usual
-              const events = res.data;
-              this.setState({ events });
-        })
-    }
-
   render() {
     return (
       <div className="App">
@@ -83,7 +66,7 @@ class MyEvents extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Button secondary onClick={this.onTestSaveFile}>Download</Button>
-                  <Button secondary onClick={this.deleteEvent}>Delete</Button>
+                  <Button secondary>View More</Button>
                 </Grid.Column>
               </Grid>
           </div>
