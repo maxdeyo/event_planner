@@ -3,6 +3,8 @@ import { Segment, Grid, Button, Header } from 'semantic-ui-react'
 import NavBar from '../components/NavBar.js';
 import EventCard from '../components/EventCard.js'
 
+const axios = require('axios');
+
 class MyEvents extends Component {
   // Initialize state
   constructor(props){
@@ -10,6 +12,7 @@ class MyEvents extends Component {
     this.state = {
       events: null
     }
+    this.deleteEvent = this.deleteEvent.bind(this);
   }
 
   // Fetch data after first mount
@@ -25,6 +28,21 @@ class MyEvents extends Component {
   }
   getFile = () => {
     fetch('/files/myfile.ics');
+  }
+
+  deleteEvent(id){
+      // Issue DELETE request
+      axios.delete(`/api/events/delete/${id}`)
+        .then(() => {
+            // Issue GET request after item deleted to get updated list
+            // that excludes user of id
+            return axios.get(`/api/events/all`)
+        })
+        .then(res => {
+            // Update events in state as per-usual
+            const events = res.data;
+            this.setState({ events });
+      })
   }
 
   render() {
@@ -60,7 +78,7 @@ class MyEvents extends Component {
                 this.state.events.map((event, index)=>{
                   return (
                     <Segment secondary={index%2===0 ? true : false}>
-                      <EventCard event={event} />
+                      <EventCard event={event}/>
                     </Segment>
                   )
                 }) : 

@@ -84,7 +84,11 @@ app.get('/files/:name',function(req,res){
     location: req.body.location,
     dtstart: req.body.dtstart,
     dtend: req.body.dtend,
-    summary: req.body.summary
+    summary: req.body.summary,
+    recurrence: req.body.recurrence,
+    tzid: req.body.tzid,
+    resources: req.body.resources,
+    priority: req.body.priority
 });
 
   // Saving it to the database.
@@ -113,6 +117,13 @@ app.get('/files/:name',function(req,res){
     } 
 }); 
     res.download(icsText(docs));
+ })
+
+ app.delete('/api/events/delete/:eventid', function(req, res){
+   Event.findByIdAndRemove({_id: req.params.eventid}, function(err, event){
+     if(err){ console.log('Error! '+ err.toString())}
+     else {console.log('Event deleted')}
+   })
  })
 
     app.get('/files/download', function(req, res) {
