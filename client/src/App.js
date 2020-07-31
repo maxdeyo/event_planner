@@ -62,6 +62,7 @@ class App extends Component {
     this.setState({event: {...this.state.event, tzid: extraTzid}})
   }
 
+  handle
   handleSubmit = (e) =>{
     e.preventDefault();
     let databody = this.state.event;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Button, Modal, Header, Icon } from 'semantic-ui-react'
+import { Grid, Button } from 'semantic-ui-react'
 
 const FileSaver = require('file-saver');
 
@@ -33,7 +33,6 @@ const icsText = (data) => {
   str+=
   'END:VEVENT' + '\n' +
   'END:VCALENDAR';
-   console.log(str);
    return str;
 }
 
@@ -47,7 +46,6 @@ class MyEvents extends Component {
       FileSaver.saveAs(blob, this.props.event._id.toString() + ".ics");
   }
   render() {
-    const [open, setOpen] = React.useState(false);
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -68,30 +66,7 @@ class MyEvents extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Button secondary onClick={this.onTestSaveFile}>Download</Button>
-                <Modal
-                  closeIcon
-                  open={open}
-                  trigger={<Button>View More</Button>}
-                  onClose={() => setOpen(false)}
-                  onOpen={() => setOpen(true)}
-                >
-                  <Header content={this.props.event.name}  />
-                  <Modal.Content>
-                    <p>Description: {this.props.event.description} </p>
-                    <p>Start: {this.props.event.dtstart} </p>
-                    <p>End: {this.props.event.dtend} </p>
-                    <p>End: {this.props.event.location} </p>
-                    <p>End: {this.props.event.resources} </p>
-                  </Modal.Content>
-                  <Modal.Actions>
-                    <Button color='red' onClick={() => setOpen(false)}>
-                      <Icon name='remove' /> Edit
-                    </Button>
-                    <Button color='green' onClick={() => setOpen(false)}>
-                      <Icon name='checkmark' /> Ok
-                    </Button>
-                  </Modal.Actions>
-                </Modal>
+                  <Button secondary>View More</Button>
                 </Grid.Column>
               </Grid>
           </div>

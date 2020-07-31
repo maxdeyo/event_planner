@@ -8,7 +8,7 @@ exports.save = (req, res) => {
     let event = new Event({
         name: req.body.name || "Untitled Note",
         description: req.body.description || "Untitled Note",
-        location: req.body.location || null,
+        location: req.body.location || "Untitled Note",
         dtstart: req.body.dtstart || "Untitled Note",
         dtend: req.body.dtend || "Untitled Note",
         summary: req.body.summary|| "Untitled Note",
