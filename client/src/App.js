@@ -51,7 +51,7 @@ class App extends Component {
     this.setState({event: {...this.state.event, dtend: endDate}})
   };
 
-  handlePriorityChange = extraPriority => {
+  handlePriorityChange = endDate => {
     this.setState({event: {...this.state.event, priority: extraPriority}})
   };
 
