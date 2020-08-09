@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Header } from 'semantic-ui-react';
 
 /* global google */
+const axios = require('axios')
 
 class Autocomplete extends React.Component {
   constructor(props) {
@@ -22,6 +23,9 @@ class Autocomplete extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
+     let databody = this.state.event;
+        const headers = { 'Content-Type': 'application/json' };
+        axios.post('/api/events/save', databody, { headers });
   }
 
   render() {
