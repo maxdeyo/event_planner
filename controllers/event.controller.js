@@ -1,10 +1,10 @@
 const Event = require('../models/event.model.js');
  
-// Save FormData - User to MongoDB
+// Save FormData - Event to MongoDB
 exports.save = (req, res) => {
   console.log('Post a User: ' + JSON.stringify(req.body));
   
-    // Create a Customer
+    // Create an Event
     let event = new Event({
         name: req.body.name || "Untitled Note",
         description: req.body.description || "Untitled Note",
@@ -15,10 +15,11 @@ exports.save = (req, res) => {
         recurrence: req.body.recurrence|| null,
         tzid: req.body.tzid|| null,
         resources: req.body.resources|| null,
-        priority: req.body.priority|| null
+        priority: req.body.priority|| null,
+        username: req.body.username || null
     });
  
-    // Save a Event in the MongoDB
+    // Save an Event in the MongoDB
     event.save()
     .then(data => {
         res.send(data);
@@ -29,14 +30,27 @@ exports.save = (req, res) => {
     });
 };
  
-// Fetch all Users
+// Fetch all Events
 exports.findAll = (req, res) =>  {
-  console.log("Fetch all Users");
+  console.log("Fetch all Events");
   
     Event.find()
-    .then(users => {
-        res.send(users);
+    .then(events => {
+        res.send(events);
     }).catch(err => {
+        res.status(500).send({
+            message: err.message
+        });
+    });
+};
+
+exports.findAllByUser = (req, res) =>  {
+    console.log("Fetch all Events By User" + req.params.username);
+
+    Event.find({username: req.params.username})
+        .then(events => {
+            res.send(events);
+        }).catch(err => {
         res.status(500).send({
             message: err.message
         });

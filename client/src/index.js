@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App.js';
 import MyEvents from './routes/MyEvents.js'
+import Signup from './routes/Signup.js';
+import Login from './routes/Login.js';
 import * as serviceWorker from './serviceWorker';
 import { Route, BrowserRouter as Router } from 'react-router-dom'
 
@@ -10,6 +12,8 @@ ReactDOM.render(
   <Router>
     <Route exact path='/' component={App} />
     <Route path='/myevents' component={MyEvents} />
+    <Route path='/signup' component={Signup} />
+    <Route path='/login' component={Login} />
   </Router>,
   document.getElementById('root')
 );

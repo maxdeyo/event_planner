@@ -1,40 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react'
-
+import * as toIcsFile from '../data/toIcsFile';
 const FileSaver = require('file-saver');
-
-const icsText = (data) => {
-  let str = 'BEGIN:VCALENDAR' + '\n' +
-  'VERSION:2.0' + '\n' + 
-  'BEGIN:VEVENT' + '\n' + 
-  'CLASS:PUBLIC' + '\n' + 
-  'DESCRIPTION:' + data.name.toString() + '\n';
-
-  //Temp comment out tzid as it doesn't work
-    /*str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
-    'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';*/
-
-  str+='DTSTART:' + data.dtstart.toString() + '\n' +
-  'DTEND:' + data.dtend.toString() + '\n';
-  if(data.recurrence){
-    str += 'RRULE:FREQ=' + data.recurrence.toString() + '\n';
-  }
-  if(data.location){
-    str+='LOCATION:' + data.location.toString() + '\n'
-  }
-  str+=
-  'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n';
-  if(data.resources){
-    str += 'RESOURCES:' + data.resources.toString() + '\n';
-  }
-  if(data.priority){
-    str+='PRIORITY:' + data.priority.toString() + '\n';
-  }
-  str+=
-  'END:VEVENT' + '\n' +
-  'END:VCALENDAR';
-   return str;
-}
 
 class MyEvents extends Component {
   constructor(props){
@@ -42,8 +9,8 @@ class MyEvents extends Component {
     this.onTestSaveFile = this.onTestSaveFile.bind(this);
   }
   onTestSaveFile() {
-      let blob = new Blob([icsText(this.props.event)], {type: "text/plain;charset=utf-8"});
-      FileSaver.saveAs(blob, this.props.event._id.toString() + ".ics");
+      let blob = new Blob([toIcsFile.icsText(this.props.event)], {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(blob, this.props.event.name + ".ics");
   }
   render() {
     return (
@@ -59,10 +26,10 @@ class MyEvents extends Component {
                   {this.props.event.description}
                 </Grid.Column>
                 <Grid.Column>
-                  {this.props.event.dtstart}
+                  {new Date(this.props.event.dtstart).toLocaleString()}
                 </Grid.Column>
                 <Grid.Column>
-                  {this.props.event.dtend}
+                  {new Date(this.props.event.dtend).toLocaleString()}
                 </Grid.Column>
                 <Grid.Column>
                   <Button secondary onClick={this.onTestSaveFile}>Download</Button>

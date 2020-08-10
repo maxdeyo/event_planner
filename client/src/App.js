@@ -6,13 +6,15 @@ import Autocomplete from './components/Autocomplete.js';
 import  RecurrenceModal from './components/RecurrenceModal.js'
 import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
-/* global google */
+import {Redirect} from "react-router-dom";
 
+import * as toIcsFile from './data/toIcsFile';
+const FileSaver = require('file-saver');
 const axios = require('axios')
 
 class App extends Component {
   // Initialize state
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       event: {
@@ -26,7 +28,10 @@ class App extends Component {
         tzid: '',
         priority: '',
         resources: ''
-      }
+      },
+      isSignedIn: false,
+      user: null,
+      redirect: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
@@ -35,6 +40,29 @@ class App extends Component {
     this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onSaveFile = this.onSaveFile.bind(this);
+  }
+
+  componentDidMount(){
+    this.setCurrentUser();
+  }
+
+  onSaveFile() {
+    let blob = new Blob([toIcsFile.icsText(this.state.event)], {type: "text/plain;charset=utf-8"});
+    FileSaver.saveAs(blob, this.state.event.name + ".ics");
+  }
+
+  setCurrentUser(){
+    fetch('/api/currentuser')
+        .then(res => res.json())
+        .then(user => {
+          if(user.username) {
+            this.setState({user: user, isSignedIn: true});
+          } else {
+            this.setState({user: null, isSignedIn: false});
+          }
+        })
+        .catch( error => console.log(error));
   }
 
   handleInputChange = e => {
@@ -62,15 +90,18 @@ class App extends Component {
     this.setState({event: {...this.state.event, tzid: extraTzid}})
   }
 
-  handle
   handleSubmit = (e) =>{
     e.preventDefault();
-    let databody = this.state.event;
+    let databody = this.state.user.username ? {...this.state.event, username: this.state.user.username} : this.state.event;
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
+    this.setState({redirect: true});
  }
 
   render() {
+    if (this.state.redirect === true) {
+      return <Redirect to='/myevents' />
+    }
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -121,8 +152,21 @@ class App extends Component {
                   disabled={!this.state.event.name
                   || !this.state.event.dtstart
                   || !this.state.event.dtend
+                  || !this.state.isSignedIn
                   }
                   onClick={this.handleSubmit}
+                />
+                <Form.Button
+                    id='form-button-control-public'
+                    content='Download Event'
+                    type='submit'
+                    color='black'
+                    style={{ position: 'relative', width: '100%', padding: '15px', top: '-80px' }}
+                    disabled={!this.state.event.name
+                    || !this.state.event.dtstart
+                    || !this.state.event.dtend
+                    }
+                    onClick={this.onSaveFile}
                 />
               </Form>
           </div>

@@ -10,24 +10,40 @@ class MyEvents extends Component {
   constructor(props){
     super(props);
     this.state = {
-      events: null
+        events: null,
+        user: null,
+        isSignedIn: false
     }
     this.deleteEvent = this.deleteEvent.bind(this);
   }
 
   // Fetch data after first mount
-  componentDidMount() {
-    this.getData();
+  async componentDidMount() {
+    await this.getData();
   }
-
-  getData = () => {
+  getData = async () => {
     // Get the data and store them in state
-    fetch('/api/events/all')
-      .then(res => res.json())
-      .then(events => this.setState({ events: events }))
-      .catch( error => console.error(error));
-  }
+      await fetch('/api/currentuser')
+          .then(res => res.json())
+          .then(user => {
+              this.setState({user: user, isSignedIn: true});
+          }).catch(error => console.log(error));
+      if(this.state.isSignedIn){
+          await fetch('/api/events/all/'+this.state.user.username.toString())
+              .then(res => res.json())
+              .then(events => this.setState({events: events}))
+              .catch(error => console.error(error));
+      } else {
+          await fetch('/api/events/all')
+              .then(res => res.json())
+              .then(events => this.setState({events: events}))
+              .catch(error => console.error(error));
+      }
 
+
+
+
+  }
 
   getFile = () => {
     fetch('/files/myfile.ics');
