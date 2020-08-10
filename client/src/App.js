@@ -137,7 +137,9 @@ class App extends Component {
                   name='description'
                   onChange={this.handleInputChange}
                 />
-                <Autocomplete />
+                <Autocomplete
+                    onChange={this.handleInputChange}
+                />
                 <ExtraOptionsModal
                    handlePriorityChange={this.handlePriorityChange}
                    handleResourceChange={this.handleResourceChange}
