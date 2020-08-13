@@ -8,7 +8,7 @@ export function icsText(data) {
     str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
     'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';
 
-    if(data.recurrence){
+    if(data.recurrence && data.recurrence != 'None'){
         str += 'RRULE:FREQ=' + data.recurrence.toString() + '\n';
     }
     if(data.location){

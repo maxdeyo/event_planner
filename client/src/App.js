@@ -13,11 +13,16 @@ const FileSaver = require('file-saver');
 const axios = require('axios')
 /* global google */
 const recurrenceOptions = [
-  { key: 'Daily', value: 'da', text: 'Daily' },
-  { key: 'Weekly', value: 'we', text: 'Weekly' },
-  { key: 'Monthly', value: 'mo', text: 'Monthly' },
-  { key: 'Annually', value: 'an', text: 'Annually' },
-  //{ key: 'as', value: 'as', text: 'Custom...' },
+  { value: 'None', text: 'None' },
+  { value: 'Daily', text: 'Daily' },
+  { value: 'Weekly', text: 'Weekly' },
+  { value: 'Monthly', text: 'Monthly' },
+  { value: 'Annually', text: 'Annually' },
+]
+
+const RSVPOptions = [
+  { value: 'True', text: 'True' },
+  { value: 'False', text: 'False' },
 ]
 class App extends Component {
   // Initialize state
@@ -230,7 +235,6 @@ class App extends Component {
                     label='Time Zone'
                     options={TimeZones}
                     placeholder='Time Zone'
-
                   />
                     </Form.Group>
                     <Form.TextArea
@@ -240,6 +244,14 @@ class App extends Component {
                         value={this.state.extraResources}
                         control={Input}
                         placeholder='Equipment/Resources to bring' />
+                    <Form.Select
+                      fluid
+                      search
+                      onChange={this.handleRSVPChange}
+                      label='Request RSVP'
+                      options={RSVPOptions}
+                      placeholder='Time Zone'
+                    />
                   </Modal.Content>
                   <Modal.Actions>
                     <Form.Button
