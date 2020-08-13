@@ -71,6 +71,12 @@ class App extends Component {
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
+    handleLocationChange = location => {
+     this.setState({event: {...this.state.event, location: location}})
+
+    }
+
+
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
   };
@@ -138,7 +144,7 @@ class App extends Component {
                   onChange={this.handleInputChange}
                 />
                 <Autocomplete
-                    onChange={this.handleInputChange}
+                    onChange={this.handleLocationChange}
                 />
                 <ExtraOptionsModal
                    handlePriorityChange={this.handlePriorityChange}

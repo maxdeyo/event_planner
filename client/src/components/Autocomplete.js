@@ -7,9 +7,10 @@ const axios = require('axios')
 class Autocomplete extends React.Component {
   constructor(props) {
     super(props)
-    this.state = null;
+    this.state = {
+       location: ''
+    }
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.autocomplete = null;
   }
 
@@ -17,21 +18,16 @@ class Autocomplete extends React.Component {
     this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
   }
 
-  handleChange(event) {
-    this.setState({[event.target.name]: event.target.value})
-  }
-
-  handleSubmit(event) {
-    event.preventDefault()
-     let databody = this.state.event;
-        const headers = { 'Content-Type': 'application/json' };
-        axios.post('/api/events/save', databody, { headers });
-  }
+  handleChange = location => {
+    this.setState({
+      location
+        });
+     };
 
   render() {
     return(
       <div>
-        <Form size='huge' onSubmit={this.handleSubmit}>
+        <Form size='huge'>
         <Form.Field
             style={{ position: 'relative', width: '166%', right: '33%' }}
             id='autocomplete'
@@ -39,7 +35,7 @@ class Autocomplete extends React.Component {
             control={Input}
             name='input-field'
             ref="input"
-            onChange={this.handleInputChange}
+            onChange={this.handleChange}
             type="text"/>
         </Form>
       </div>
