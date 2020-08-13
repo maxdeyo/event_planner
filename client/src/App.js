@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import TimeZones from './data/timezones.js';
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
 import  RecurrenceModal from './components/RecurrenceModal.js'
@@ -17,6 +18,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        open: false,
       event: {
         name: '',
         description: '',
@@ -33,16 +35,16 @@ class App extends Component {
       user: null,
       redirect: false
     }
-    this.handleLocationChange= this.handleLocationChange.bind(this);
+   // this.handleLocationChange= this.handleLocationChange.bind(this);
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
-    this.handleEndChange = this.handleEndChange.bind(this);
-    this.handlePriorityChange = this.handlePriorityChange.bind(this);
-    this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
-    this.handleResourceChange = this.handleResourceChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+    this.setResourceData = this.setResourceData.bind(this);
+    this.setPriorityData = this.setPriorityData.bind(this);
+    this.handleTzidChange = this.handleTzidChange.bind(this);
     this.autocomplete = null;
   }
 
@@ -77,18 +79,11 @@ class App extends Component {
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
-    handleLocationChange = e => {
-      const value = e.target.value;
-      this.setState({event: {...this.state.event, location: value }})
+    handleLocationSelect = e => {
+      let addressObject = this.autocomplete.getPlace();
+      let address = addressObject.address_components
+      this.setState({event: {...this.state.event, location: addressObject.formatted_address }})
     };
-
-    handleLocationSelect() {
-        let addressObject = this.autocomplete.getPlace();
-        let address = addressObject.address_components;
-        this.setState({
-          location: addressObject.location
-        })
-    }
 
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
@@ -98,16 +93,21 @@ class App extends Component {
     this.setState({event: {...this.state.event, dtend: endDate}})
   };
 
-  handlePriorityChange = extraPriority => {
-    this.setState({event: {...this.state.event, priority: extraPriority}})
-  };
-
-  handleResourceChange = extraResources => {
-    this.setState({event: {...this.state.event, resources: extraResources}})
-  };
-  handleTimeZoneChange = extraTzid => {
-    this.setState({event: {...this.state.event, tzid: extraTzid}})
+  closeConfigShow = (closeOnEscape) => () => {
+    this.setState({ closeOnEscape, open: true })
   }
+
+  close = () => this.setState({ open: false })
+
+  setResourceData(extraResources) {
+    this.setState({extraResources: extraResources.target.value})
+  }
+
+  setPriorityData(extraPriority) {
+    this.setState({extraPriority: extraPriority.target.value})
+  }
+
+  handleTzidChange = (e, { value }) => this.setState({ value })
 
   handleSubmit = (e) =>{
     e.preventDefault();
@@ -122,6 +122,9 @@ class App extends Component {
     if (this.state.redirect === true) {
       return <Redirect to='/myevents' />
     }
+        const { open, closeOnEscape } = this.state;
+        const {value} = this.state;
+        const{tzidValue} = this.state;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -166,16 +169,60 @@ class App extends Component {
                     control={Input}
                     name='location'
                     value={this.state.location}
-                    OnSelect={this.handlePlaceSelect}
                     onChange={this.handleLocationChange}
                  />
                 </Form>
                 </div>
-                <ExtraOptionsModal
-                   handlePriorityChange={this.handlePriorityChange}
-                   handleResourceChange={this.handleResourceChange}
-                   handleTimeZoneChange={this.handleTimeZoneChange}
-                 />
+
+            <div>
+        <Button size='medium' style={{ position: 'relative', top: '-100px',  width: '100%' }} onClick={this.closeConfigShow(false, true)}>
+          Extra Options
+        </Button>
+                <Modal
+                  open={open}
+                  closeOnEscape={closeOnEscape}
+                  onClose={this.close}
+                  as={Form} >
+
+                <Modal.Header>Extra Options</Modal.Header>
+                  <Modal.Content>
+                    <Form.Group widths='equal'>
+                      <Form.Input
+                        fluid
+                        label='Priority'
+                        placeholder='Enter a number (0-9)'
+                        onChange={this.setPriorityData}
+                        value={this.state.extraPriority}
+                      />
+                  <Form.Select
+                    fluid
+                    search
+                    onChange={this.handleTzidChange}
+                    value={value}
+                    label='Time Zone'
+                    options={TimeZones}
+                    placeholder='Time Zone'
+
+                  />
+                    </Form.Group>
+                    <Form.TextArea
+                        label='Resources'
+                        onChange={this.setResourceData}
+                        value={this.state.extraResources}
+                        placeholder='Equipment/Resources to bring' />
+                  </Modal.Content>
+                  <Modal.Actions>
+                    <Form.Button
+                      type='submit'
+                      onClick= {this.close}
+                      positive
+                      labelPosition='right'
+                      icon='checkmark'
+                      content='Save and Close'
+                    />
+                  </Modal.Actions>
+                </Modal>
+                </div>
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'

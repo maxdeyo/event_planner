@@ -21,21 +21,7 @@ class ExtraOptionsModal extends React.Component {
     e.preventDefault();
    }
 
-  closeConfigShow = (closeOnEscape) => () => {
-    this.setState({ closeOnEscape, open: true })
-  }
 
-  close = () => this.setState({ open: false })
-
-  setResourceData(extraResources) {
-    this.setState({extraResources: extraResources.target.value})
-  }
-
-  setPriorityData(extraPriority) {
-    this.setState({extraPriority: extraPriority.target.value})
-  }
-
-  handleTzidChange = (e, { value }) => this.setState({ value })
 
   render() {
     const { open, closeOnEscape } = this.state;
