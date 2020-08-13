@@ -12,7 +12,13 @@ import * as toIcsFile from './data/toIcsFile';
 const FileSaver = require('file-saver');
 const axios = require('axios')
 /* global google */
-
+const recurrenceOptions = [
+  { key: 'Daily', value: 'da', text: 'Daily' },
+  { key: 'Weekly', value: 'we', text: 'Weekly' },
+  { key: 'Monthly', value: 'mo', text: 'Monthly' },
+  { key: 'Annually', value: 'an', text: 'Annually' },
+  //{ key: 'as', value: 'as', text: 'Custom...' },
+]
 class App extends Component {
   // Initialize state
   constructor(props) {
@@ -42,6 +48,7 @@ class App extends Component {
     this.handleEndChange = this.handleEndChange.bind(this);;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+    this.handleRecurrenceChange = this.handleRecurrenceChange.bind(this);
 
     this.setResourceData = this.setResourceData.bind(this);
     this.setPriorityData = this.setPriorityData.bind(this);
@@ -79,6 +86,11 @@ class App extends Component {
     const value = e.target.value;
     this.setState({event: {...this.state.event, [name]: value}})
   }
+
+    handleRecurrenceChange = (e, { value }) =>{
+      this.setState({ value });
+      this.setState({event: {...this.state.event, recurrence: value}})
+    }
 
     handleLocationSelect = e => {
       let addressObject = this.autocomplete.getPlace();
@@ -157,8 +169,16 @@ class App extends Component {
                   handleEndChange={this.handleEndChange}
                 />
                   </div>
-                 <RecurrenceModal
-                   onChange={this.handleInputChange}/>
+                <Form.Select
+                     name='recurrence'
+                     placeholder='Select Recurrence'
+                     label='Recurrence Options'
+                     fluid
+                     search
+                     selection
+                     options={recurrenceOptions}
+                     onChange={this.handleRecurrenceChange}
+                   />
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
