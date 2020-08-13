@@ -39,8 +39,11 @@ class App extends Component {
     this.handlePriorityChange = this.handlePriorityChange.bind(this);
     this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
     this.handleResourceChange = this.handleResourceChange.bind(this);
+    this.handleRecurrenceChange = this.handleRecurrenceChange.bind(this);
+    this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+    this.setExtraOptions = this.setExtraOptions.bind(this);
   }
 
   componentDidMount(){
@@ -65,10 +68,23 @@ class App extends Component {
         .catch( error => console.log(error));
   }
 
+  setExtraOptions(data){
+    this.setState({event: {
+        ...this.state.event,
+        tzid: data.tzid,
+        priority: data.priority,
+        resources: data.resources
+      }})
+  }
+
   handleInputChange = e => {
     const name = e.target.name;
     const value = e.target.value;
     this.setState({event: {...this.state.event, [name]: value}})
+  }
+
+  handleRecurrenceChange = (e,{value}) => {
+    this.setState({event: {...this.state.event, recurrence: value}})
   }
 
   handleStartChange = startDate => {
@@ -88,6 +104,9 @@ class App extends Component {
   };
   handleTimeZoneChange = extraTzid => {
     this.setState({event: {...this.state.event, tzid: extraTzid}})
+  }
+  handleLocationChange = e => {
+    this.setState({event: {...this.state.event, location: e.target.value}});
   }
 
   handleSubmit = (e) =>{
@@ -111,6 +130,7 @@ class App extends Component {
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
               <div class='form'>
+                <span>{JSON.stringify(this.state.event)}</span>
               <Form size='huge'>
                 <Form.Field required
                   id='form-textarea-control-event'
@@ -127,7 +147,9 @@ class App extends Component {
                 />
                   </div>
                  <RecurrenceModal
-                   onChange={this.handleInputChange}/>
+                   onChange={this.handleRecurrenceChange}
+                   val={this.state.event.recurrence}
+                 />
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
@@ -138,12 +160,13 @@ class App extends Component {
                   onChange={this.handleInputChange}
                 />
                 <Autocomplete
-                    onChange={this.handleInputChange}
+                    onChange={this.handleLocationChange}
                 />
                 <ExtraOptionsModal
                    handlePriorityChange={this.handlePriorityChange}
                    handleResourceChange={this.handleResourceChange}
                    handleTimeZoneChange={this.handleTimeZoneChange}
+                   setExtraOptions={this.setExtraOptions}
                  />
                 <Form.Button
                   id='form-button-control-public'

@@ -9,7 +9,6 @@ class Autocomplete extends React.Component {
     super(props)
     this.state = null;
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.autocomplete = null;
   }
 
@@ -21,25 +20,18 @@ class Autocomplete extends React.Component {
     this.setState({[event.target.name]: event.target.value})
   }
 
-  handleSubmit(event) {
-    event.preventDefault()
-     let databody = this.state.event;
-        const headers = { 'Content-Type': 'application/json' };
-        axios.post('/api/events/save', databody, { headers });
-  }
-
   render() {
     return(
       <div>
-        <Form size='huge' onSubmit={this.handleSubmit}>
+        <Form size='huge' onSubmit={this.props.onChange}>
         <Form.Field
             style={{ position: 'relative', width: '166%', right: '33%' }}
             id='autocomplete'
             label='Location'
             control={Input}
-            name='input-field'
+            name='location'
             ref="input"
-            onChange={this.handleInputChange}
+            onChange={this.props.onChange}
             type="text"/>
         </Form>
       </div>

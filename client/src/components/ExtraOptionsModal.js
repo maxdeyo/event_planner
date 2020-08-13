@@ -3,14 +3,23 @@ import ReactDOM from "react-dom";
 import TimeZones from '../data/timezones.js';
 import { Form, Input, Modal, Button, Header } from 'semantic-ui-react';
 
+const recurrenceOptions = [
+    { key: 'af', value: 'af', text: 'Daily' },
+    { key: 'ax', value: 'ax', text: 'Weekly' },
+    { key: 'al', value: 'al', text: 'Monthly' },
+    { key: 'dz', value: 'dz', text: 'Annually' },
+    //{ key: 'as', value: 'as', text: 'Custom...' },
+]
+
+
 class ExtraOptionsModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-    open: false,
-    extraPriority: '',
-    extraTzid: '',
-    extraResources: '',
+        open: false,
+        extraPriority: '',
+        extraTzid: '',
+        extraResources: '',
     };
         this.setResourceData = this.setResourceData.bind(this);
         this.setPriorityData = this.setPriorityData.bind(this);
@@ -25,7 +34,14 @@ class ExtraOptionsModal extends React.Component {
     this.setState({ closeOnEscape, open: true })
   }
 
-  close = () => this.setState({ open: false })
+  close = () => {
+      this.props.setExtraOptions({
+          priority:this.state.extraPriority,
+          tzid:this.state.extraTzid,
+          resources:this.state.extraResources
+      });
+      this.setState({ open: false });
+  }
 
   setResourceData(extraResources) {
     this.setState({extraResources: extraResources.target.value})
@@ -35,7 +51,7 @@ class ExtraOptionsModal extends React.Component {
     this.setState({extraPriority: extraPriority.target.value})
   }
 
-  handleTzidChange = (e, { value }) => this.setState({ value })
+  handleTzidChange = (e, { value }) => this.setState({ extraTzid: value })
 
   render() {
     const { open, closeOnEscape } = this.state;
@@ -67,7 +83,7 @@ class ExtraOptionsModal extends React.Component {
             fluid
             search
             onChange={this.handleTzidChange}
-            value={value}
+            value={this.state.extraTzid}
             label='Time Zone'
             options={TimeZones}
             placeholder='Time Zone'

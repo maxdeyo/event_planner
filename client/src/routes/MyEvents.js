@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Segment, Grid, Button, Header } from 'semantic-ui-react'
 import NavBar from '../components/NavBar.js';
 import EventCard from '../components/EventCard.js'
+import * as toIcsFile from '../data/toIcsFile';
+import {Redirect} from "react-router-dom";
+const FileSaver = require('file-saver');
 
 const axios = require('axios');
 
@@ -12,9 +15,11 @@ class MyEvents extends Component {
     this.state = {
         events: null,
         user: null,
-        isSignedIn: false
+        isSignedIn: false,
+        refresh: false
     }
     this.deleteEvent = this.deleteEvent.bind(this);
+    this.downloadAllEvents = this.downloadAllEvents.bind(this);
   }
 
   // Fetch data after first mount
@@ -45,27 +50,23 @@ class MyEvents extends Component {
 
   }
 
-  getFile = () => {
-    fetch('/files/myfile.ics');
-  }
-
-  deleteEvent(id){
+  async deleteEvent(id){
       // Issue DELETE request
-      axios.delete(`/api/events/delete/${id}`)
+      await axios.delete(`/api/events/delete/${id}`)
         .then(() => {
-            // Issue GET request after item deleted to get updated list
-            // that excludes user of id
-            return axios.get(`/api/events/all`)
+            this.getData();
         })
-        .then(res => {
-            // Update events in state as per-usual
-            const events = res.data;
-            this.setState({ events });
-      })
+          .catch(err=>console.log(err));
+      this.setState({refresh: true});
   }
-
+  downloadAllEvents() {
+      let blob = new Blob([toIcsFile.icsAllEvents(this.state.events)], {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(blob, "MyEvents" + ".ics");
+  }
   render() {
-
+      if (this.state.refresh === true) {
+          return <Redirect to='/' />
+      }
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -73,7 +74,7 @@ class MyEvents extends Component {
             <NavBar />
             <Segment inverted color='black' size='huge' className='add-an-event-segment'>
                 <Header as='h1' textAlign='center'> My Events </Header>
-                <Button primary>Download All</Button>
+                <Button primary onClick={this.downloadAllEvents}>Download All</Button>
             </Segment>
               <Grid columns='equal'>
                 <Grid.Column>
@@ -93,11 +94,11 @@ class MyEvents extends Component {
               </Grid>
               <Segment.Group>
              {
-               this.state.events!==null ? 
+               this.state.events!==null&&this.state.events.length>0 ?
                 this.state.events.map((event, index)=>{
                   return (
                     <Segment secondary={index%2===0 ? true : false}>
-                      <EventCard event={event}/>
+                      <EventCard event={event} deleteEvent={()=>this.deleteEvent(event._id)}/>
                     </Segment>
                   )
                 }) : 

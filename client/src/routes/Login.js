@@ -78,7 +78,7 @@ class Login extends Component {
                     />
                     <Form.Button
                         id='form-button-control-public'
-                        content='Create User'
+                        content='Sign In'
                         type='submit'
                         color='blue'
                         style={{ position: 'relative', width: '100%', padding: '15px' }}

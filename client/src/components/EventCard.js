@@ -33,6 +33,9 @@ class MyEvents extends Component {
                 </Grid.Column>
                 <Grid.Column>
                   <Button secondary onClick={this.onTestSaveFile}>Download</Button>
+                  <Button negative
+                          onClick={this.props.deleteEvent}
+                  >X</Button>
                 </Grid.Column>
               </Grid>
           </div>

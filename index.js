@@ -23,7 +23,6 @@ mongoose.connect(uristring, function (err, res) {
     }
 });
 
-
 const Event = require('./models/event.model.js');
 const events = require('./controllers/event.controller.js');
 
@@ -41,57 +40,6 @@ app.get('/api/test', (req, res) => {
 
     console.log(`Sent test`);
 });
-
-let icsObj = {
-    version: 2.0,
-    event: 'VEVENT',
-    class: 'PUBLIC',
-    description: 'Study',
-    dtstart: '20200813T200000Z',
-    dtend: '20200813T230000Z',
-    location: 'Hamilton Library',
-    summary: ';LANGUAGE=en-us:Study for Exam',
-}
-
-const icsText = (data) => {
-    let str = 'BEGIN:VCALENDAR' + '\n' +
-        'VERSION:2.0' + '\n' +
-        'BEGIN:VEVENT' + '\n' +
-        'CLASS:PUBLIC' + '\n' +
-        'DESCRIPTION:' + data.name.toString() + '\n';
-
-    //Temp comment out tzid as it doesn't work
-    /*str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
-    'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';*/
-
-    str += 'DTSTART:' + data.dtstart.toString() + '\n' +
-        'DTEND:' + data.dtend.toString() + '\n';
-    if (data.recurrence) {
-        str += 'RRULE:FREQ=' + data.recurrence.toString() + '\n';
-    }
-    if (data.location) {
-        str += 'LOCATION:' + data.location.toString() + '\n'
-    }
-    str +=
-        'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n';
-    if (data.resources) {
-        str += 'RESOURCES:' + data.resources.toString() + '\n';
-    }
-    if (data.priority) {
-        str += 'PRIORITY:' + data.priority.toString() + '\n';
-    }
-    str +=
-        'END:VEVENT' + '\n' +
-        'END:VCALENDAR';
-    return str;
-}
-
-var text = {"myfile.ics": "This is a file!"};
-app.get('/files/:name', function (req, res) {
-    res.set({"Content-Disposition": "attachment; filename=\"myfile.ics\""});
-    res.send(text["myfile.ics"]);
-});
-
 
 app.post('/api/events/save', function (req, res) {
     console.log('Post a User: ' + JSON.stringify(req.body));
@@ -125,21 +73,6 @@ app.get('/api/events/find/:id', function (req, res) {
     console.log('ID: ' + req.params.id);
 })
 
-app.get('/api/events/download/:id', function (req, res) {
-    console.log('ID: ' + req.params.id.toString());
-    res.set({"Content-Disposition": "attachment; filename=\"" + req.params.id.toString() + ".ics\""});
-    Event.findById(req.params.id, function (err, docs) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(JSON.stringify(docs));
-            let filePath = req.params.id.toString() + ".ics";
-            res.send(icsText(docs));
-        }
-    });
-    res.download(icsText(docs));
-})
-
 app.delete('/api/events/delete/:eventid', function (req, res) {
     Event.findByIdAndRemove({_id: req.params.eventid}, function (err, event) {
         if (err) {
@@ -149,12 +82,6 @@ app.delete('/api/events/delete/:eventid', function (req, res) {
         }
     })
 })
-
-app.get('/files/download', function (req, res) {
-    res.contentType('text/plain');
-    res.send('This is the content', {'Content-Disposition': 'attachment; filename=name.txt'});
-});
-
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');

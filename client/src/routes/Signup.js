@@ -35,13 +35,25 @@ class Signup extends Component {
         const headers = { 'Content-Type': 'application/json' };
         axios.post('/api/signup', databody, { headers })
             .then((res)=>{
+                console.log("trying to signup " + JSON.stringify(res));
                 this.setState({errorMessage: JSON.stringify(res)})
-                this.setState({isSignedIn: res.data.success});
                 if(res.data.success&&res.data.success==true){
                     this.setState({errorMessage: '', toLogin: true});
                 }
             })
-            .then(()=>this.setState({toLogin: true}));
+            .then(()=> {
+                axios.post('/api/login', databody, {headers})
+                    .then((res)=>{
+                        console.log("signedin " + JSON.stringify(res))
+                        this.setState({errorMessage: JSON.stringify(res.data)})
+                        this.setState({isSignedIn: res.data.success});
+                        if(res.data.success!=true){
+                            this.setState({errorMessage: 'Log In Failed'});
+                        } else {
+                            this.setState({errorMessage: ''});
+                        }
+                    })
+            });
     }
     render() {
         if (this.state.isSignedIn === true) {
