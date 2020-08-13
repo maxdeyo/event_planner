@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, TextArea, Message, Segment, Button, Header, Modal } from 'semantic-ui-react'
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
 import Autocomplete from './components/Autocomplete.js';
@@ -7,10 +7,13 @@ import  RecurrenceModal from './components/RecurrenceModal.js'
 import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
 import {Redirect} from "react-router-dom";
+import TimeZones from './data/timezones';
 
 import * as toIcsFile from './data/toIcsFile';
 const FileSaver = require('file-saver');
 const axios = require('axios')
+
+/*global google*/
 
 class App extends Component {
   // Initialize state
@@ -38,9 +41,6 @@ class App extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
-    this.handlePriorityChange = this.handlePriorityChange.bind(this);
-    this.handleTimeZoneChange = this.handleTimeZoneChange.bind(this);
-    this.handleResourceChange = this.handleResourceChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
   }
