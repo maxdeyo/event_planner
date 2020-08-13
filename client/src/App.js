@@ -83,9 +83,17 @@ class App extends Component {
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
+<<<<<<< HEAD
   handleRecurrenceChange = (e,{value}) => {
     this.setState({event: {...this.state.event, recurrence: value}})
   }
+=======
+    handleLocationChange = location => {
+     this.setState({event: {...this.state.event, location: location}})
+
+    }
+
+>>>>>>> b4388ccedc781fdec50c445b8ee43b8e2fb01c68
 
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
