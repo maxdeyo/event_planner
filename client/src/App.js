@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, Radio, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import TimeZones from './data/timezones.js';
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
@@ -41,13 +41,19 @@ class App extends Component {
         recurrence: '',
         tzid: '',
         priority: '',
-        resources: ''
+        resources: '',
+        rsvp: false,
+        sentby: '',
+        mailto: ''
       },
       isSignedIn: false,
       user: null,
       redirect: false
     }
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
+    this.setSentByData = this.setSentByData.bind(this);
+    this.setMailTo = this.setMailTo.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);;
@@ -65,7 +71,6 @@ class App extends Component {
     this.setCurrentUser();
     this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
     this.autocomplete.addListener("place_changed", this.handleLocationSelect)
-
   }
 
   onSaveFile() {
@@ -84,6 +89,12 @@ class App extends Component {
           }
         })
         .catch( error => console.log(error));
+  }
+
+
+  handleCheckboxChange = () => {
+    let newRSVP = !(this.state.rsvp);
+    this.setState({event: {...this.state.event, rsvp: newRSVP}});
   }
 
   handleInputChange = e => {
@@ -124,15 +135,27 @@ class App extends Component {
     this.setState({event: {...this.state.event, resources: extraResources.target.value}})
   }
 
+    setSentByData(extraSentBy) {
+      this.setState({extraSentBy: extraSentBy.target.value})
+      this.setState({event: {...this.state.event, sentby: extraSentBy.target.value}})
+    }
+
+    setMailTo(extraMailTo) {
+      this.setState({extraMailTo: extraMailTo.target.value})
+      this.setState({event: {...this.state.event, mailto: extraMailTo.target.value}})
+    }
+
   setPriorityData(extraPriority) {
     this.setState({extraPriority: extraPriority.target.value})
     this.setState({event: {...this.state.event, priority: extraPriority.target.value}})
   }
 
+
   handleTzidChange = (e, { value }) =>{
     this.setState({ value });
     this.setState({event: {...this.state.event, tzid: value}})
   }
+
 
   handleSubmit = (e) =>{
     e.preventDefault();
@@ -149,7 +172,8 @@ class App extends Component {
     }
         const { open, closeOnEscape } = this.state;
         const {value} = this.state;
-        const{tzidValue} = this.state;
+        const {tzidvalue} = this.state;
+        let isChecked = this.state.rsvp;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -206,7 +230,6 @@ class App extends Component {
                  />
                 </Form>
                 </div>
-
             <div>
         <Button size='medium' style={{ position: 'relative', top: '-100px',  width: '100%' }} onClick={this.closeConfigShow(false, true)}>
           Extra Options
@@ -230,11 +253,12 @@ class App extends Component {
                   <Form.Select
                     fluid
                     search
-                    onChange={this.handleTzidChange}
+                    name='tzid'
                     value={value}
                     label='Time Zone'
                     options={TimeZones}
                     placeholder='Time Zone'
+                    onChange={this.handleTzidChange}
                   />
                     </Form.Group>
                     <Form.TextArea
@@ -244,14 +268,24 @@ class App extends Component {
                         value={this.state.extraResources}
                         control={Input}
                         placeholder='Equipment/Resources to bring' />
-                    <Form.Select
-                      fluid
-                      search
-                      onChange={this.handleRSVPChange}
-                      label='Request RSVP'
-                      options={RSVPOptions}
-                      placeholder='Time Zone'
-                    />
+                      <Form.Group inline>
+                        <Form.TextArea
+                            label='Sent by'
+                            name='Sent by'
+                            onChange={this.setSentByData}
+                            value={this.state.extraSentBy}
+                            control={Input}
+                            placeholder='joe@schmoe.com' />
+                        <Form.TextArea
+                            label='Mail to'
+                            name='Mail to'
+                            onChange={this.setMailTo}
+                            value={this.state.extraMailTo}
+                            control={Input}
+                            placeholder='joe@schmoe.com' />
+                       <Form.Checkbox label='Request RSVP'
+                       onSelect={this.handleCheckboxChange} checked={this.state.rsvp}/>
+                            </Form.Group>
                   </Modal.Content>
                   <Modal.Actions>
                     <Form.Button

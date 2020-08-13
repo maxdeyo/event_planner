@@ -10,6 +10,9 @@ let eventSchema = mongoose.Schema({
     recurrence: String,
     tzid: String,
     priority: String,
+    rsvp: String,
+    sentby: String,
+    mailto: String,
     resources: String,
     username: String
 });

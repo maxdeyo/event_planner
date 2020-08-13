@@ -24,6 +24,18 @@ export function icsText(data) {
     if(data.priority){
         str+='PRIORITY:' + data.priority.toString() + '\n';
     }
+    if(data.rsvp == true){
+        str+='RSVP:TRUE' + '\n';
+    }
+    if(!data.rsvp || data.rsvp == false ){
+        str+='RSVP:FALSE' + '\n';
+    }
+    if(data.sentby){
+        str+='ORGANIZER;SENT-BY=' + '\'mailto:' + data.sentby.toString() + '\':';
+    }
+    if(data.mailto){
+        str+='mailto:' + data.mailto.toString() + '\n';
+    }
     str+=
         'END:VEVENT' + '\n' +
         'END:VCALENDAR';
