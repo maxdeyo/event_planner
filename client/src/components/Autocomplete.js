@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Input, Header } from 'semantic-ui-react';
 
 /* global google */
-const axios = require('axios')
 
 class Autocomplete extends React.Component {
   constructor(props) {

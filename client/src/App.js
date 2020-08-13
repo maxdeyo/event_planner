@@ -20,7 +20,7 @@ class App extends Component {
       event: {
         name: '',
         description: '',
-        location: '',
+        thislocation: '',
         dtstart: '',
         dtend: '',
         summary: '',
@@ -34,6 +34,7 @@ class App extends Component {
       redirect: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
     this.handlePriorityChange = this.handlePriorityChange.bind(this);
@@ -43,7 +44,7 @@ class App extends Component {
     this.onSaveFile = this.onSaveFile.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setCurrentUser();
   }
 
@@ -72,10 +73,9 @@ class App extends Component {
   }
 
     handleLocationChange = location => {
-     this.setState({event: {...this.state.event, location: location}})
+     this.setState({event: {...this.state.event, thislocation: location}})
 
     }
-
 
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
