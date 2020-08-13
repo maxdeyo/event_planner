@@ -9,6 +9,7 @@ exports.save = (req, res) => {
         name: req.body.name || "Untitled Note",
         description: req.body.description || "Untitled Note",
         location: req.body.location || "Untitled Note",
+        geocode: req.body.geocode || "Untitled Note",
         dtstart: req.body.dtstart || "Untitled Note",
         dtend: req.body.dtend || "Untitled Note",
         summary: req.body.summary|| "Untitled Note",

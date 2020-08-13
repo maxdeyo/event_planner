@@ -15,7 +15,8 @@ export function icsText(data) {
         str += 'RRULE:FREQ=' + data.recurrence.toString() + '\n';
     }
     if(data.location){
-        str+='LOCATION:' + data.location.toString() + '\n'
+        str+='LOCATION:' + data.location.toString() + '\n';
+        str+='GEO:' + data.geocode.toString() + '\n';
     }
     str+=
         'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n';

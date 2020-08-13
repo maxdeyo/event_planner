@@ -23,6 +23,7 @@ class App extends Component {
         name: '',
         description: '',
         location: '',
+        geocode: '',
         dtstart: '',
         dtend: '',
         summary: '',
@@ -81,8 +82,10 @@ class App extends Component {
 
     handleLocationSelect = e => {
       let addressObject = this.autocomplete.getPlace();
-      let address = addressObject.address_components
+      let lat = addressObject.geometry.location.lat();
+      let lng = addressObject.geometry.location.lng();
       this.setState({event: {...this.state.event, location: addressObject.formatted_address }})
+      this.setState({event: {...this.state.event, geocode: lat + ';' + lng }})
     };
 
   handleStartChange = startDate => {
