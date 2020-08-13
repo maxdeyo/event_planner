@@ -36,13 +36,13 @@ class App extends Component {
       user: null,
       redirect: false
     }
-   // this.handleLocationChange= this.handleLocationChange.bind(this);
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+
     this.setResourceData = this.setResourceData.bind(this);
     this.setPriorityData = this.setPriorityData.bind(this);
     this.handleTzidChange = this.handleTzidChange.bind(this);
@@ -104,13 +104,18 @@ class App extends Component {
 
   setResourceData(extraResources) {
     this.setState({extraResources: extraResources.target.value})
+    this.setState({event: {...this.state.event, resources: extraResources.target.value}})
   }
 
   setPriorityData(extraPriority) {
     this.setState({extraPriority: extraPriority.target.value})
+    this.setState({event: {...this.state.event, priority: extraPriority.target.value}})
   }
 
-  handleTzidChange = (e, { value }) => this.setState({ value })
+  handleTzidChange = (e, { value }) =>{
+    this.setState({ value });
+    this.setState({event: {...this.state.event, tzid: value}})
+  }
 
   handleSubmit = (e) =>{
     e.preventDefault();
@@ -210,8 +215,10 @@ class App extends Component {
                     </Form.Group>
                     <Form.TextArea
                         label='Resources'
+                        name='resources'
                         onChange={this.setResourceData}
                         value={this.state.extraResources}
+                        control={Input}
                         placeholder='Equipment/Resources to bring' />
                   </Modal.Content>
                   <Modal.Actions>
@@ -226,6 +233,7 @@ class App extends Component {
                   </Modal.Actions>
                 </Modal>
                 </div>
+
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'
