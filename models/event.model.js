@@ -2,6 +2,7 @@ let mongoose = require("mongoose");
 let eventSchema = mongoose.Schema({
     name: String,
     description: String,
+    geocode: String,
     location: String,
     dtstart: String,
     dtend: String,

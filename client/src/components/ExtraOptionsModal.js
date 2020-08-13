@@ -3,15 +3,6 @@ import ReactDOM from "react-dom";
 import TimeZones from '../data/timezones.js';
 import { Form, Input, Modal, Button, Header } from 'semantic-ui-react';
 
-const recurrenceOptions = [
-    { key: 'af', value: 'af', text: 'Daily' },
-    { key: 'ax', value: 'ax', text: 'Weekly' },
-    { key: 'al', value: 'al', text: 'Monthly' },
-    { key: 'dz', value: 'dz', text: 'Annually' },
-    //{ key: 'as', value: 'as', text: 'Custom...' },
-]
-
-
 class ExtraOptionsModal extends React.Component {
   constructor(props){
     super(props);
@@ -83,7 +74,7 @@ class ExtraOptionsModal extends React.Component {
             fluid
             search
             onChange={this.handleTzidChange}
-            value={this.state.extraTzid}
+            value={value}
             label='Time Zone'
             options={TimeZones}
             placeholder='Time Zone'
