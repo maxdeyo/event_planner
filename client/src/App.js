@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Form, Input, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
-import Autocomplete from './components/Autocomplete.js';
 import  RecurrenceModal from './components/RecurrenceModal.js'
 import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
@@ -11,6 +10,7 @@ import {Redirect} from "react-router-dom";
 import * as toIcsFile from './data/toIcsFile';
 const FileSaver = require('file-saver');
 const axios = require('axios')
+/* global google */
 
 class App extends Component {
   // Initialize state
@@ -20,7 +20,7 @@ class App extends Component {
       event: {
         name: '',
         description: '',
-        thislocation: '',
+        location: '',
         dtstart: '',
         dtend: '',
         summary: '',
@@ -33,8 +33,9 @@ class App extends Component {
       user: null,
       redirect: false
     }
+    this.handleLocationChange= this.handleLocationChange.bind(this);
+    this.handleLocationSelect = this.handleLocationSelect.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
     this.handleEndChange = this.handleEndChange.bind(this);
     this.handlePriorityChange = this.handlePriorityChange.bind(this);
@@ -42,10 +43,14 @@ class App extends Component {
     this.handleResourceChange = this.handleResourceChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+    this.autocomplete = null;
   }
 
   componentDidMount() {
     this.setCurrentUser();
+    this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
+    this.autocomplete.addListener("place_changed", this.handleLocationSelect)
+
   }
 
   onSaveFile() {
@@ -72,9 +77,17 @@ class App extends Component {
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
-    handleLocationChange = location => {
-     this.setState({event: {...this.state.event, thislocation: location}})
+    handleLocationChange = e => {
+      const value = e.target.value;
+      this.setState({event: {...this.state.event, location: value }})
+    };
 
+    handleLocationSelect() {
+        let addressObject = this.autocomplete.getPlace();
+        let address = addressObject.address_components;
+        this.setState({
+          location: addressObject.location
+        })
     }
 
   handleStartChange = startDate => {
@@ -102,6 +115,7 @@ class App extends Component {
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
     this.setState({redirect: true});
+    this.clearForm();
  }
 
   render() {
@@ -143,9 +157,20 @@ class App extends Component {
                   name='description'
                   onChange={this.handleInputChange}
                 />
-                <Autocomplete
+                <div>
+                <Form size='huge'>
+                <Form.Field
+                    style={{ position: 'relative', width: '166%', right: '33%' }}
+                    id='autocomplete'
+                    label='Location'
+                    control={Input}
+                    name='location'
+                    value={this.state.location}
+                    OnSelect={this.handlePlaceSelect}
                     onChange={this.handleLocationChange}
-                />
+                 />
+                </Form>
+                </div>
                 <ExtraOptionsModal
                    handlePriorityChange={this.handlePriorityChange}
                    handleResourceChange={this.handleResourceChange}
