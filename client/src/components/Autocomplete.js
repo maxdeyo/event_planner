@@ -2,12 +2,13 @@ import React from 'react';
 import { Form, Input, Header } from 'semantic-ui-react';
 
 /* global google */
-const axios = require('axios')
 
 class Autocomplete extends React.Component {
   constructor(props) {
     super(props)
-    this.state = null;
+    this.state = {
+       location: ''
+    }
     this.handleChange = this.handleChange.bind(this);
     this.autocomplete = null;
   }
@@ -16,22 +17,24 @@ class Autocomplete extends React.Component {
     this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
   }
 
-  handleChange(event) {
-    this.setState({[event.target.name]: event.target.value})
-  }
+  handleChange = location => {
+    this.setState({
+      location
+        });
+     };
 
   render() {
     return(
       <div>
-        <Form size='huge' onSubmit={this.props.onChange}>
+        <Form size='huge'>
         <Form.Field
             style={{ position: 'relative', width: '166%', right: '33%' }}
             id='autocomplete'
             label='Location'
             control={Input}
-            name='location'
+            name='input-field'
             ref="input"
-            onChange={this.props.onChange}
+            onChange={this.handleChange}
             type="text"/>
         </Form>
       </div>
