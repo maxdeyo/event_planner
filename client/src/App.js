@@ -13,17 +13,13 @@ const FileSaver = require('file-saver');
 const axios = require('axios')
 /* global google */
 const recurrenceOptions = [
-  { value: 'None', text: 'None' },
-  { value: 'Daily', text: 'Daily' },
-  { value: 'Weekly', text: 'Weekly' },
-  { value: 'Monthly', text: 'Monthly' },
-  { value: 'Annually', text: 'Annually' },
+  { value: 'NONE', text: 'None' },
+  { value: 'DAILY', text: 'Daily' },
+  { value: 'WEEKLY', text: 'Weekly' },
+  { value: 'MONTHLY', text: 'Monthly' },
+  { value: 'ANNUALLY', text: 'Annually' },
 ]
 
-const RSVPOptions = [
-  { value: 'True', text: 'True' },
-  { value: 'False', text: 'False' },
-]
 class App extends Component {
   // Initialize state
   constructor(props) {

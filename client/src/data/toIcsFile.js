@@ -5,12 +5,18 @@ export function icsText(data) {
         'CLASS:PUBLIC' + '\n' +
         'DESCRIPTION:' + data.name.toString() + '\n';
 
+    if (data.tzid) {
     str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
     'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';
-
-    if(data.recurrence && data.recurrence != 'None'){
-        str += 'RRULE:FREQ=' + data.recurrence.toString() + '\n';
+    } else {
+     str+='DTSTART:' + data.dtstart.toString() + '\n' +
+        'DTEND:' + data.dtend.toString() + '\n';
     }
+
+    if(data.recurrence && data.recurrence != 'NONE'){
+        str += 'FREQ=' + data.recurrence.toString() + '\n';
+    }
+
     if(data.location){
         str+='LOCATION:' + data.location.toString() + '\n';
         str+='GEO:' + data.geocode.toString() + '\n';
