@@ -2,32 +2,34 @@ const Event = require('../models/event.model.js');
  
 // Save FormData - Event to MongoDB
 exports.save = (req, res) => {
-  console.log('Post a User: ' + JSON.stringify(req.body));
-  
-    // Create an Event
+    console.log('Post an event: ' + JSON.stringify(req.body));
+
     let event = new Event({
-        name: req.body.name || "Untitled Note",
-        description: req.body.description || "Untitled Note",
-        location: req.body.location || "Untitled Note",
-        geocode: req.body.geocode || "Untitled Note",
-        dtstart: req.body.dtstart || "Untitled Note",
-        dtend: req.body.dtend || "Untitled Note",
-        summary: req.body.summary|| "Untitled Note",
-        recurrence: req.body.recurrence|| null,
-        tzid: req.body.tzid|| null,
-        resources: req.body.resources|| null,
-        priority: req.body.priority|| null,
-        username: req.body.username || null
+        name: req.body.name,
+        description: req.body.description,
+        location: req.body.location,
+        geocode: req.body.geocode,
+        dtstart: req.body.dtstart,
+        dtend: req.body.dtend,
+        summary: req.body.summary,
+        recurrence: req.body.recurrence,
+        tzid: req.body.tzid,
+        priority: req.body.priority,
+        rsvp: req.body.rsvp,
+        sentby: req.body.sentby,
+        mailto: req.body.mailto,
+        resources: req.body.resources,
+        username: req.body.username
     });
- 
-    // Save an Event in the MongoDB
-    event.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message
-        });
+    // Saving it to the database.
+    event.save(function (err) {
+        if (err) {
+            console.log('Error on save!');
+            res.status(500).json({ message: err });
+        } else {
+            console.log('Event Saved!');
+            res.status(200).json({ message: 'Event Saved' });
+        }
     });
 };
  

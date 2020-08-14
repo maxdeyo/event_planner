@@ -41,34 +41,7 @@ app.get('/api/test', (req, res) => {
     console.log(`Sent test`);
 });
 
-app.post('/api/events/save', function (req, res) {
-    console.log('Post an event: ' + JSON.stringify(req.body));
-
-    let event = new Event({
-        name: req.body.name,
-        description: req.body.description,
-        location: req.body.location,
-        dtstart: req.body.dtstart,
-        dtend: req.body.dtend,
-        summary: req.body.summary,
-        recurrence: req.body.recurrence,
-        tzid: req.body.tzid,
-        resources: req.body.resources,
-        priority: req.body.priority,
-        username: req.body.username
-    });
-
-    // Saving it to the database.
-    event.save(function (err) {
-        if (err) {
-            console.log('Error on save!');
-            res.status(500).json({ message: err });
-        } else {
-            console.log('Event Saved!');
-            res.status(200).json({ message: 'Event Saved' });
-        }
-    });
-});
+app.post('/api/events/save', events.save);
 app.get('/api/events/all', events.findAll);
 
 app.get('/api/events/find/:id', function (req, res) {
