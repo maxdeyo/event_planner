@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Checkbox, Radio, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, Checkbox, Radio, Modal, Popup, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import TimeZones from './data/timezones.js';
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
-import  RecurrenceModal from './components/RecurrenceModal.js'
-import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
 import {Redirect} from "react-router-dom";
 
@@ -173,18 +171,18 @@ class App extends Component {
     this.setState({event: {...this.state.event, [name]: value}})
   }
 
-    handleRecurrenceChange = (e, { value }) =>{
-      this.setState({ value });
-      this.setState({event: {...this.state.event, recurrence: value}})
-    }
+  handleRecurrenceChange = (e, { value }) =>{
+    this.setState({ value });
+    this.setState({event: {...this.state.event, recurrence: value}})
+  }
 
-    handleLocationSelect = e => {
-      let addressObject = this.autocomplete.getPlace();
-      let lat = addressObject.geometry.location.lat();
-      let lng = addressObject.geometry.location.lng();
-      this.setState({event: {...this.state.event, location: addressObject.formatted_address }})
-      this.setState({event: {...this.state.event, geocode: lat + ';' + lng }})
-    };
+  handleLocationSelect = e => {
+    let addressObject = this.autocomplete.getPlace();
+    let lat = addressObject.geometry.location.lat();
+    let lng = addressObject.geometry.location.lng();
+    this.setState({event: {...this.state.event, location: addressObject.formatted_address }})
+    this.setState({event: {...this.state.event, geocode: lat + ';' + lng }})
+  };
 
   handleStartChange = startDate => {
     this.setState({event: {...this.state.event, dtstart: startDate}})
@@ -205,15 +203,15 @@ class App extends Component {
     this.setState({event: {...this.state.event, resources: extraResources.target.value}})
   }
 
-    setSentByData(extraSentBy) {
-      this.setState({extraSentBy: extraSentBy.target.value})
-      this.setState({event: {...this.state.event, sentby: extraSentBy.target.value}})
-    }
+  setSentByData(extraSentBy) {
+    this.setState({extraSentBy: extraSentBy.target.value})
+    this.setState({event: {...this.state.event, sentby: extraSentBy.target.value}})
+  }
 
-    setMailTo(extraMailTo) {
-      this.setState({extraMailTo: extraMailTo.target.value})
-      this.setState({event: {...this.state.event, mailto: extraMailTo.target.value}})
-    }
+  setMailTo(extraMailTo) {
+    this.setState({extraMailTo: extraMailTo.target.value})
+    this.setState({event: {...this.state.event, mailto: extraMailTo.target.value}})
+  }
 
   setPriorityData(extraPriority) {
     this.setState({extraPriority: extraPriority.target.value})
@@ -221,7 +219,7 @@ class App extends Component {
   }
 
 
-  handleTzidChange = (e, { value }) =>{
+  handleTzidChange = (e, { value }) => {
     this.setState({ value });
     this.setState({event: {...this.state.event, tzid: value}})
   }
@@ -324,14 +322,18 @@ class App extends Component {
                   error={this.state.nameError ? {content: '25 characters max. You have ' + this.state.event.name.length + ' characters.', pointing: 'below', } :null }
                   onChange={this.handleInputChange}
                 />
-
+                  <Popup
+                    position='left center'
+                    trigger={
                 <div class="calendar">
                 <Calendar
                   handleStartChange={this.handleStartChange}
                   handleEndChange={this.handleEndChange}
                 />
+                </div>
+                    }>
+                <Popup.Content>Must be before end date</Popup.Content></Popup>
                 { this.state.calendarError ? <Message error header='Start date must be before end date'/> :null }
-                  </div>
                 <Form.Select
                      name='recurrence'
                      placeholder='Select Recurrence'
@@ -379,14 +381,18 @@ class App extends Component {
                 <Modal.Header>Extra Options</Modal.Header>
                   <Modal.Content>
                     <Form.Group widths='equal'>
+                      <Popup
+                        trigger={
                       <Form.Input
                         fluid
                         label='Priority'
                         placeholder='Enter a number (0-9)'
                         onChange={this.setPriorityData}
-                        error={this.state.priorityError ? {content: 'Enter a number from 1 - 9', pointing: 'below', } :null }
+                        error={this.state.priorityError ? {content: 'Enter a number from 0 - 9', pointing: 'below', } :null }
                         value={this.state.extraPriority}
                       />
+                     }>
+                     <Popup.Content>0 denotes none. 1 is highest and 9 is lowest.</Popup.Content></Popup>
                   <Form.Select
                     fluid
                     search
@@ -408,6 +414,8 @@ class App extends Component {
                         this.state.event.resources.length + ' characters.', pointing: 'below', } : null }
                         placeholder='Equipment/Resources to bring (35 characters max)' />
                       <Form.Group inline>
+                        <Popup
+                          trigger={
                         <Form.TextArea
                             label='Sent by'
                             name='Sent by'
@@ -415,7 +423,8 @@ class App extends Component {
                             value={this.state.extraSentBy}
                             control={Input}
                             error={this.state.sentByError ? {content: 'Must be an e-mail', pointing: 'below', } :null }
-                            placeholder='joe@schmoe.com' />
+                            placeholder='joe@schmoe.com' /> }>
+                        <Popup.Content>The user acting on behalf of the organizer.</Popup.Content></Popup>
                         <Form.TextArea
                             label='Mail to'
                             name='Mail to'

@@ -55,7 +55,8 @@ class Login extends Component {
         return (
             <div className="app">
                 <Segment inverted color='black' size='huge' className='add-an-event-segment'>
-                    <Header as='h1' textAlign='center'>Log In</Header>
+                    <Header as='h1' style={{ position: 'relative', width: '100%', top: '20px' }}
+                    textAlign='center'>Log In</Header>
                     <Button inverted onClick={()=>this.setState({toHome: true})}>Home</Button>
                     <Button inverted onClick={()=>this.setState({toSignUp: true})}>Sign Up</Button>
                 </Segment>

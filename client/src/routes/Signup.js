@@ -120,7 +120,7 @@ class Signup extends Component {
         return (
             <div className="app">
                 <Segment inverted color='black' size='huge' className='add-an-event-segment'>
-                    <Header as='h1' textAlign='center'>Sign Up</Header>
+                    <Header as='h1' textAlign='center' style={{ position: 'relative', width: '100%', top: '20px' }}>Sign Up</Header>
                     <Button
                         onClick={() => this.setState({toHome: true})}
                         inverted
