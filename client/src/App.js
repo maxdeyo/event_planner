@@ -145,6 +145,7 @@ class App extends Component {
 
     let blob = new Blob([toIcsFile.icsText(this.state.event)], {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(blob, this.state.event.name + ".ics");
+    setTimeout(() => window.location.reload(true), 1200);
   }
 
   setCurrentUser(){
@@ -228,23 +229,70 @@ class App extends Component {
 
   handleSubmit = (e) =>{
     e.preventDefault();
-    let error = false;
-    console.log(this.state.event.name.length);
-    let length = this.state.event.name.length;
-    if (length > 25) {
-        this.setState({ nameError: true });
-        error = true;
-    } else {
-        this.setState({ nameError: false })
-    }
+     let error = false;
+           let extraOptionsError = false;
+           // name error
+           if (this.state.event.name.length > 25) {
+               this.setState({ nameError: true });
+               error = true;
+           } else {
+               this.setState({ nameError: false })
+           }
+           // description error
+           if (this.state.event.description.length > 50) {
+               this.setState({ descriptionError: true });
+               error = true;
+           } else {
+               this.setState({ descriptionError: false })
+           }
+           // sentby/mail to error
+           if (!this.state.event.sentby.includes('@') && this.state.event.sentby) {
+               this.setState({ sentByError: true });
+               extraOptionsError = true;
+           } else {
+               this.setState({ sentByError: false });
+           }
+           if (!this.state.event.mailto.includes('@') && this.state.event.mailto) {
+               this.setState({ mailToError: true });
+               extraOptionsError = true;
+           } else {
+               this.setState({ mailToError: false });
+           }
+           if (this.state.event.resources.length > 35) {
+               this.setState({ resourceError: true });
+               extraOptionsError = true;
+           } else {
+               this.setState({ resourceError: false });
+           }
+           if (!this.state.event.priority ||  this.state.event.priority == '0' || this.state.event.priority == '1' || this.state.event.priority == '2' ||
+           this.state.event.priority == '3' || this.state.event.priority == '4' || this.state.event.priority == '5' ||
+           this.state.event.priority == '6' || this.state.event.priority == '7' || this.state.event.priority == '8' ||
+           this.state.event.priority == '9') {
+               this.setState({ priorityError: false });
+           } else {
+               this.setState({ priorityError: true });
+               extraOptionsError = true;
+           }
+           // calendar error
+           if (this.state.event.dtstart > this.state.event.dtend) {
+               this.setState({ calendarError: true });
+               error = true;
+           } else {
+               this.setState({ calendarError: false })
+           }
 
-
-
-    if (error) {
-        this.setState({ formError: true });
-        return;
-    }
-    this.setState({ formError: false });
+           if (error && extraOptionsError) {
+               this.setState({ color: 'red', formError: true })
+               return;
+           } else if (extraOptionsError) {
+               this.setState({ color: 'red' })
+               return;
+           } else if (error) {
+               this.setState({ formError: true });
+               return;
+           }
+           this.setState({ color: 'gray' })
+           this.setState({ formError: false });
 
     let databody = this.state.user.username ? {...this.state.event, username: this.state.user.username} : this.state.event;
     const headers = { 'Content-Type': 'application/json' };
@@ -256,8 +304,7 @@ class App extends Component {
     if (this.state.redirect === true) {
       return <Redirect to='/myevents' />
     }
-        const { open, closeOnEscape } = this.state;
-        const {value} = this.state;
+        const { open, value, closeOnEscape } = this.state;
     return (
       <div className="App">
         {/* Render the data if we have it */}
