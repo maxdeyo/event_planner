@@ -1,11 +1,20 @@
 let mongoose = require("mongoose");
 let eventSchema = mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
     description: String,
     geocode: String,
     location: String,
-    dtstart: String,
-    dtend: String,
+    dtstart: {
+        type: String,
+        required: true
+    },
+    dtend: {
+        type: String,
+        required: true
+    },
     summary: String,
     recurrence: String,
     tzid: String,

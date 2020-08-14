@@ -50,6 +50,7 @@ exports.findAllByUser = (req, res) =>  {
 
     Event.find({username: req.params.username})
         .then(events => {
+            res.status(200);
             res.send(events);
         }).catch(err => {
         res.status(500).send({

@@ -42,7 +42,7 @@ app.get('/api/test', (req, res) => {
 });
 
 app.post('/api/events/save', function (req, res) {
-    console.log('Post a User: ' + JSON.stringify(req.body));
+    console.log('Post an event: ' + JSON.stringify(req.body));
 
     let event = new Event({
         name: req.body.name,
@@ -62,8 +62,10 @@ app.post('/api/events/save', function (req, res) {
     event.save(function (err) {
         if (err) {
             console.log('Error on save!');
+            res.status(500).json({ message: err });
         } else {
             console.log('Event Saved!');
+            res.status(200).json({ message: 'Event Saved' });
         }
     });
 });
@@ -101,49 +103,56 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.post('/api/signup', (req, res, next) => {
-    console.log('trying to post!');
     User.register(new User({
             username: req.body.username
         }), req.body.password, (err, user) => {
             if (err) {
-                res.statusCode = 500;
-                res.setHeader('Content-Type', 'application/json');
+                res.status(500);
                 res.json({
                     err: err
                 });
                 console.log('err');
                 console.log(JSON.stringify(err));
             } else {
-                console.log('else');
                 passport.authenticate('local', req, res, () => {
                     User.findOne({
                         username: req.body.username
                     }, (err, person) => {
-                        res.statusCode = 200;
-                        res.setHeader('Content-Type', 'application/json');
                         if(err){
+                            res.status(500);
                             res.json(err);
+                        } else {
+                            console.log("Succesfully created new user");
+                            res.status(200);
+                            res.json({
+                                success: true,
+                                status: 'Registration Successful!',
+                            });
                         }
                     });
                 })
             }
         })
-    res.setHeader('Content-Type', 'application/json');
-    res.json({
-        success: true,
-        status: 'Registration Successful!',
-    });
+
 });
 app.post('/api/login', passport.authenticate('local'), (req, res) => {
     User.findOne({
         username: req.body.username
     }, (err, person) => {
-        res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json({
-            success: true,
-            status: 'You are successfully logged in!'
-        });
+        if(err){
+            res.status(400);
+            res.json({
+                success: false,
+                status: "Login Failed!"
+            })
+        } else {
+            res.status(200);
+            res.json({
+                success: true,
+                status: 'You are successfully logged in!'
+            });
+        }
     })
 });
 app.get('/api/logout', (req, res, next) => {
@@ -162,6 +171,7 @@ app.get('/api/logout', (req, res, next) => {
     } else {
         var err = new Error('You are not logged in!');
         err.status = 403;
+        res.status(403);
         next(err);
     }
 });
