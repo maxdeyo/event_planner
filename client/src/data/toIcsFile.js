@@ -28,9 +28,11 @@ export function icsText(data) {
         str += 'FREQ=' + data.recurrence.toString() + '\r\n';
     }
 
-    if(data.location){
-        str+='LOCATION:' + data.location.toString() + '\r\n';
-        str+='GEO:' + data.geocode.toString() + '\r\n';
+    if(data.location) {
+        str += 'LOCATION:' + data.location.toString() + '\r\n';
+    }
+    if(data.geocode) {
+        str += 'GEO:' + data.geocode.toString() + '\r\n';
     }
     str+=
         'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\r\n';
@@ -79,9 +81,11 @@ export function icsAllEvents(events){
             str += 'FREQ=' + event.recurrence.toString() + '\r\n';
         }
 
-        if(event.location){
-            str+='LOCATION:' + event.location.toString() + '\r\n';
-            str+='GEO:' + event.geocode.toString() + '\r\n';
+        if(event.location) {
+            str += 'LOCATION:' + event.location.toString() + '\r\n';
+        }
+        if(event.geocode) {
+            str += 'GEO:' + event.geocode.toString() + '\r\n';
         }
         str+=
             'SUMMARY;LANGUAGE=en-us:' + event.description.toString() + '\r\n';
