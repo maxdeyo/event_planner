@@ -124,14 +124,15 @@ app.post('/api/signup', (req, res, next) => {
                         if(err){
                             res.json(err);
                         }
-                        res.json({
-                            success: true,
-                            status: 'Registration Successful!',
-                        });
                     });
                 })
             }
         })
+    res.setHeader('Content-Type', 'application/json');
+    res.json({
+        success: true,
+        status: 'Registration Successful!',
+    });
 });
 app.post('/api/login', passport.authenticate('local'), (req, res) => {
     User.findOne({

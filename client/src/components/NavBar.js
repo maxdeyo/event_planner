@@ -69,13 +69,26 @@ class NavBar extends Component {
                     Log Out
                   </Button>
                   :
-              <Button primary
+                  <div>
+                    <Button primary
+                            as={NavLink}
+                            exact to="/signup"
+                            name="Sign Up"
+                            active={activeItem === 'signup'}
+                            onClick={this.handleItemClick}
+                    >
+                      Sign Up
+                    </Button>
+                    <Button primary
                       as={NavLink}
-                      exact to="/signup"
-                      name="Sign Up"
-                      active={activeItem === 'signup'}
+                      exact to="/login"
+                      name="Log In"
+                      active={activeItem === 'login'}
                       onClick={this.handleItemClick}
-              >My Account</Button>
+                    >
+                      Log In
+                    </Button>
+                  </div>
             }
           </Menu.Item>
         </Menu.Menu>

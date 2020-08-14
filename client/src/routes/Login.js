@@ -11,6 +11,7 @@ class Login extends Component {
         super(props);
         this.state = {
             isSignedIn: false,
+            toHome: false,
             account: {
                 username: null,
                 password: null
@@ -45,7 +46,7 @@ class Login extends Component {
             });
     }
     render() {
-        if (this.state.isSignedIn === true) {
+        if (this.state.isSignedIn === true || this.state.toHome) {
             return <Redirect to='/' />
         }
         if (this.state.toSignUp === true) {
@@ -55,8 +56,8 @@ class Login extends Component {
             <div className="app">
                 <Segment inverted color='black' size='huge' className='add-an-event-segment'>
                     <Header as='h1' textAlign='center'>Log In</Header>
-                    <Header as='h2'>{this.state.errorMessage}</Header>
-                    <Button primary onClick={()=>this.setState({toSignUp: true})}>Sign Up</Button>
+                    <Button inverted onClick={()=>this.setState({toHome: true})}>Home</Button>
+                    <Button inverted onClick={()=>this.setState({toSignUp: true})}>Sign Up</Button>
                 </Segment>
                 <Form size='huge'>
                     <Form.Field required

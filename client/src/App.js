@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
-import { Form, Input, TextArea, Message, Segment, Button, Header, Modal } from 'semantic-ui-react'
+import { Form, Input, Checkbox, Radio, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import TimeZones from './data/timezones.js';
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
-import Autocomplete from './components/Autocomplete.js';
 import  RecurrenceModal from './components/RecurrenceModal.js'
 import  ExtraOptionsModal from './components/ExtraOptionsModal.js'
 import './App.css';
 import {Redirect} from "react-router-dom";
-import TimeZones from './data/timezones';
 
 import * as toIcsFile from './data/toIcsFile';
 const FileSaver = require('file-saver');
 const axios = require('axios')
-
-/*global google*/
+/* global google */
+const recurrenceOptions = [
+  { value: 'NONE', text: 'None' },
+  { value: 'DAILY', text: 'Daily' },
+  { value: 'WEEKLY', text: 'Weekly' },
+  { value: 'MONTHLY', text: 'Monthly' },
+  { value: 'ANNUALLY', text: 'Annually' },
+]
 
 class App extends Component {
   // Initialize state
   constructor(props) {
     super(props);
     this.state = {
+        open: false,
       event: {
         name: '',
         description: '',
@@ -31,26 +37,36 @@ class App extends Component {
         recurrence: '',
         tzid: '',
         priority: '',
-        resources: ''
+        resources: '',
+        rsvp: false,
+        sentby: '',
+        mailto: ''
       },
       isSignedIn: false,
       user: null,
       redirect: false
     }
-   // this.handleLocationChange= this.handleLocationChange.bind(this);
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
+    this.setSentByData = this.setSentByData.bind(this);
+    this.setMailTo = this.setMailTo.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStartChange = this.handleStartChange.bind(this);
-    this.handleEndChange = this.handleEndChange.bind(this);
+    this.handleEndChange = this.handleEndChange.bind(this);;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onSaveFile = this.onSaveFile.bind(this);
+    this.handleRecurrenceChange = this.handleRecurrenceChange.bind(this);
+
+    this.setResourceData = this.setResourceData.bind(this);
+    this.setPriorityData = this.setPriorityData.bind(this);
+    this.handleTzidChange = this.handleTzidChange.bind(this);
+    this.autocomplete = null;
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setCurrentUser();
     this.autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), {})
     this.autocomplete.addListener("place_changed", this.handleLocationSelect)
-
   }
 
   onSaveFile() {
@@ -71,13 +87,10 @@ class App extends Component {
         .catch( error => console.log(error));
   }
 
-  setExtraOptions(data){
-    this.setState({event: {
-        ...this.state.event,
-        tzid: data.tzid,
-        priority: data.priority,
-        resources: data.resources
-      }})
+  handleCheckboxChange = () => {
+    let newRSVP = !(this.state.event.rsvp);
+    this.setState({event: {...this.state.event, rsvp: newRSVP}});
+    console.log(newRSVP);
   }
 
   handleInputChange = e => {
@@ -85,6 +98,11 @@ class App extends Component {
     const value = e.target.value;
     this.setState({event: {...this.state.event, [name]: value}})
   }
+
+    handleRecurrenceChange = (e, { value }) =>{
+      this.setState({ value });
+      this.setState({event: {...this.state.event, recurrence: value}})
+    }
 
     handleLocationSelect = e => {
       let addressObject = this.autocomplete.getPlace();
@@ -110,13 +128,30 @@ class App extends Component {
 
   setResourceData(extraResources) {
     this.setState({extraResources: extraResources.target.value})
+    this.setState({event: {...this.state.event, resources: extraResources.target.value}})
   }
+
+    setSentByData(extraSentBy) {
+      this.setState({extraSentBy: extraSentBy.target.value})
+      this.setState({event: {...this.state.event, sentby: extraSentBy.target.value}})
+    }
+
+    setMailTo(extraMailTo) {
+      this.setState({extraMailTo: extraMailTo.target.value})
+      this.setState({event: {...this.state.event, mailto: extraMailTo.target.value}})
+    }
 
   setPriorityData(extraPriority) {
     this.setState({extraPriority: extraPriority.target.value})
+    this.setState({event: {...this.state.event, priority: extraPriority.target.value}})
   }
 
-  handleTzidChange = (e, { value }) => this.setState({ value })
+
+  handleTzidChange = (e, { value }) =>{
+    this.setState({ value });
+    this.setState({event: {...this.state.event, tzid: value}})
+  }
+
 
   handleSubmit = (e) =>{
     e.preventDefault();
@@ -124,7 +159,6 @@ class App extends Component {
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
     this.setState({redirect: true});
-    this.clearForm();
  }
 
   render() {
@@ -133,7 +167,7 @@ class App extends Component {
     }
         const { open, closeOnEscape } = this.state;
         const {value} = this.state;
-        const{tzidValue} = this.state;
+        const {tzidvalue} = this.state;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -143,7 +177,6 @@ class App extends Component {
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
               <div class='form'>
-                <span>{JSON.stringify(this.state.event)}</span>
               <Form size='huge'>
                 <Form.Field required
                   id='form-textarea-control-event'
@@ -153,16 +186,23 @@ class App extends Component {
                   name='name'
                   onChange={this.handleInputChange}
                 />
+
                 <div class="calendar">
                 <Calendar 
                   handleStartChange={this.handleStartChange}
                   handleEndChange={this.handleEndChange}
                 />
                   </div>
-                 <RecurrenceModal
-                   onChange={this.handleRecurrenceChange}
-                   val={this.state.event.recurrence}
-                 />
+                <Form.Select
+                     name='recurrence'
+                     placeholder='Select Recurrence'
+                     label='Recurrence Options'
+                     fluid
+                     search
+                     selection
+                     options={recurrenceOptions}
+                     onChange={this.handleRecurrenceChange}
+                   />
                 <Form.Field
                   class='form-description-class'
                   id='form-description'
@@ -185,7 +225,6 @@ class App extends Component {
                  />
                 </Form>
                 </div>
-
             <div>
         <Button size='medium' style={{ position: 'relative', top: '-100px',  width: '100%' }} onClick={this.closeConfigShow(false, true)}>
           Extra Options
@@ -209,19 +248,43 @@ class App extends Component {
                   <Form.Select
                     fluid
                     search
-                    onChange={this.handleTzidChange}
+                    name='tzid'
                     value={value}
                     label='Time Zone'
                     options={TimeZones}
                     placeholder='Time Zone'
-
+                    onChange={this.handleTzidChange}
                   />
                     </Form.Group>
                     <Form.TextArea
                         label='Resources'
+                        name='resources'
                         onChange={this.setResourceData}
                         value={this.state.extraResources}
+                        control={Input}
                         placeholder='Equipment/Resources to bring' />
+                      <Form.Group inline>
+                        <Form.TextArea
+                            label='Sent by'
+                            name='Sent by'
+                            onChange={this.setSentByData}
+                            value={this.state.extraSentBy}
+                            control={Input}
+                            placeholder='joe@schmoe.com' />
+                        <Form.TextArea
+                            label='Mail to'
+                            name='Mail to'
+                            onChange={this.setMailTo}
+                            value={this.state.extraMailTo}
+                            control={Input}
+                            placeholder='joe@schmoe.com' />
+                         <Form.Checkbox
+                            label='Request RSVP'
+                            name='rsvp'
+                            checked={this.state.event.rsvp}
+                            control={Checkbox}
+                            onChange={this.handleCheckboxChange} />
+                            </Form.Group>
                   </Modal.Content>
                   <Modal.Actions>
                     <Form.Button
@@ -235,6 +298,7 @@ class App extends Component {
                   </Modal.Actions>
                 </Modal>
                 </div>
+
                 <Form.Button
                   id='form-button-control-public'
                   content='Create Event'

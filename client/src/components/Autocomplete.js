@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Header } from 'semantic-ui-react';
 
 /* global google */
+const axios = require('axios')
 
 class Autocomplete extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class Autocomplete extends React.Component {
             control={Input}
             name='input-field'
             ref="input"
-            onChange={this.handleChange}
+            onChange={this.handleInputChange}
             type="text"/>
         </Form>
       </div>

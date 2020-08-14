@@ -7,10 +7,10 @@ class ExtraOptionsModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-    open: false,
-    extraPriority: '',
-    extraTzid: '',
-    extraResources: '',
+        open: false,
+        extraPriority: '',
+        extraTzid: '',
+        extraResources: '',
     };
         this.setResourceData = this.setResourceData.bind(this);
         this.setPriorityData = this.setPriorityData.bind(this);
@@ -21,7 +21,28 @@ class ExtraOptionsModal extends React.Component {
     e.preventDefault();
    }
 
+  closeConfigShow = (closeOnEscape) => () => {
+    this.setState({ closeOnEscape, open: true })
+  }
 
+  close = () => {
+      this.props.setExtraOptions({
+          priority:this.state.extraPriority,
+          tzid:this.state.extraTzid,
+          resources:this.state.extraResources
+      });
+      this.setState({ open: false });
+  }
+
+  setResourceData(extraResources) {
+    this.setState({extraResources: extraResources.target.value})
+  }
+
+  setPriorityData(extraPriority) {
+    this.setState({extraPriority: extraPriority.target.value})
+  }
+
+  handleTzidChange = (e, { value }) => this.setState({ extraTzid: value })
 
   render() {
     const { open, closeOnEscape } = this.state;
