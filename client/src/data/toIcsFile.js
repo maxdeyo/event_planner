@@ -1,4 +1,12 @@
 export function icsText(data) {
+    var dateObj = new Date().toISOString();
+    dateObj = dateObj.substring(0, dateObj.length-4);
+
+    var userDtStart = new Date(data.dtstart).toISOString();
+    userDtStart = userDtStart.substring(0, userDtStart.length-4);
+    var userDtEnd = new Date(data.dtend).toISOString();
+    userDtEnd = userDtEnd.substring(0, userDtEnd.length-4);
+
     let str = 'BEGIN:VCALENDAR' + '\r\n' +
         'PRODID:-//Sloth Wall//Event Calendar Version 1.0//EN' + '\r\n' +
         'VERSION:2.0' + '\r\n' +
@@ -6,14 +14,14 @@ export function icsText(data) {
         'CLASS:PUBLIC' + '\r\n' +
         'DESCRIPTION:' + data.name.toString() + '\r\n' +
         'UID:' + (new Date().toISOString()) + '@slothwall.com' + '\r\n' +
-        'DTSTAMP:' + (new Date().toUTCString()) + '\r\n';
+        'DTSTAMP:' + dateObj.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'')+ 'Z' +'\r\n';
 
     if (data.tzid) {
-    str+='DTSTART;TZID=' + data.tzid.toString() + ':' + (new Date(data.dtstart).toISOString()) + '\r\n' +
-    'DTEND;TZID=' + data.tzid.toString() + ':' + (new Date(data.dtend).toISOString()) + '\r\n';
+    str+='DTSTART;TZID=' + data.tzid.toString() + ':' + userDtStart.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n' +
+    'DTEND;TZID=' + data.tzid.toString() + ':' + userDtEnd.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n';
     } else {
-     str+='DTSTART:' + (new Date(data.dtstart).toUTCString()) + '\r\n' +
-        'DTEND:' + (new Date(data.dtend).toUTCString()) + '\r\n';
+     str+='DTSTART:' + userDtStart.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n' +
+        'DTEND:' + userDtEnd.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n';
     }
 
     if(data.recurrence && data.recurrence != 'NONE'){
