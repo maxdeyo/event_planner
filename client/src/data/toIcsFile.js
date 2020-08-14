@@ -5,25 +5,42 @@ export function icsText(data) {
         'CLASS:PUBLIC' + '\n' +
         'DESCRIPTION:' + data.name.toString() + '\n';
 
-    //Temp comment out tzid as it doesn't work
-    /*str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
-    'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';*/
-
-    str+='DTSTART:' + data.dtstart.toJSON() + '\n' +
-        'DTEND:' + data.dtend.toJSON() + '\n';
-    if(data.recurrence){
-        str += 'RRULE:FREQ=' + data.recurrence.toString() + ';INTERVAL=1' + '\n';
+    if (data.tzid) {
+    str+='DTSTART;TZID=' + data.tzid.toString() + ':' + data.dtstart.toString() + '\n' +
+    'DTEND;TZID=' + data.tzid.toString() + ':' + data.dtend.toString() + '\n';
+    } else {
+     str+='DTSTART:' + data.dtstart.toString() + '\n' +
+        'DTEND:' + data.dtend.toString() + '\n';
     }
+
+    if(data.recurrence && data.recurrence != 'NONE'){
+        str += 'FREQ=' + data.recurrence.toString() + '\n';
+    }
+
     if(data.location){
         str+='LOCATION:' + data.location.toString() + '\n';
         str+='GEO:' + data.geocode.toString() + '\n';
     }
-    str+= 'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n';
+    str+=
+        'SUMMARY;LANGUAGE=en-us:' + data.description.toString() + '\n';
     if(data.resources){
+          console.log('Error:', data.resources);
         str += 'RESOURCES:' + data.resources.toString() + '\n';
     }
     if(data.priority){
         str+='PRIORITY:' + data.priority.toString() + '\n';
+    }
+    if(data.rsvp == true){
+        str+='RSVP:TRUE' + '\n';
+    }
+    if(!data.rsvp || data.rsvp == false ){
+        str+='RSVP:FALSE' + '\n';
+    }
+    if(data.sentby){
+        str+='ORGANIZER;SENT-BY=' + '\'mailto:' + data.sentby.toString() + '\':';
+    }
+    if(data.mailto){
+        str+='mailto:' + data.mailto.toString() + '\n';
     }
     str+=
         'END:VEVENT' + '\n' +
