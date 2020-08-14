@@ -456,7 +456,7 @@ class App extends Component {
 
                 <Form.Button
                   id='form-button-control-public'
-                  content='Create Event'
+                  content='Save Event'
                   type='submit'
                   color='blue'
                   style={{ position: 'relative', width: '100%', padding: '15px', top: '-80px' }}
