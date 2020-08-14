@@ -333,7 +333,7 @@ class App extends Component {
                 </div>
                     }>
                 <Popup.Content>Must be before end date</Popup.Content></Popup>
-                { this.state.calendarError ? <Message error header='Start date must be before end date'/> :null }
+                { this.state.calendarError ? <Message error content='Start date must be before end date'/> :null }
                 <Form.Select
                      name='recurrence'
                      placeholder='Select Recurrence'
