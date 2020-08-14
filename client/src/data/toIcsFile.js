@@ -17,12 +17,11 @@ export function icsText(data) {
         'DTSTAMP:' + dateObj.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'')+ 'Z' +'\r\n';
 
     if (data.tzid) {
-    str+='DTSTART;TZID=' + data.tzid.toString() + ':' + userDtStart.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n' +
-    'DTEND;TZID=' + data.tzid.toString() + ':' + userDtEnd.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n';
-    } else {
-     str+='DTSTART:' + userDtStart.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n' +
-        'DTEND:' + userDtEnd.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n';
+    str+='TZID:' + data.tzid.toString() + '\r\n';
     }
+
+    str+='DTSTART:' + userDtStart.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n' +
+       'DTEND:' + userDtEnd.replace(/-/g,'').replace(/:/g,'').replace(/\./g,'') + '\r\n';
 
     if(data.recurrence && data.recurrence != 'NONE'){
         str += 'FREQ=' + data.recurrence.toString() + '\r\n';
