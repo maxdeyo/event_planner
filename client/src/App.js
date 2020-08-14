@@ -42,12 +42,16 @@ class App extends Component {
         sentby: '',
         mailto: ''
       },
+      color: '',
       isSignedIn: false,
       user: null,
       redirect: false,
       nameError: false,
-      emailError: false,
-      locationError: false,
+      descriptionError: false,
+      sentByError: false,
+      mailToError: false,
+      resourceError: false,
+      priorityError: false,
       formError: false
     }
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
@@ -75,18 +79,58 @@ class App extends Component {
 
   onSaveFile() {
         let error = false;
-        console.log(this.state.event.name.length);
-        let length = this.state.event.name.length;
-        if (length > 25) {
+        let extraOptionsError = false;
+        // name error
+        if (this.state.event.name.length > 25) {
             this.setState({ nameError: true });
             error = true;
         } else {
             this.setState({ nameError: false })
         }
-        if (error) {
-            this.setState({ formError: true });
+        // description error
+        if (this.state.event.description.length > 50) {
+            this.setState({ descriptionError: true });
+            error = true;
+        } else {
+            this.setState({ descriptionError: false })
+        }
+        // sentby/mail to error
+        if (!this.state.event.sentby.includes('@') && this.state.event.sentby) {
+            this.setState({ sentByError: true });
+            extraOptionsError = true;
+        } else {
+            this.setState({ sentByError: false });
+        }
+        if (!this.state.event.mailto.includes('@') && this.state.event.mailto) {
+            this.setState({ mailToError: true });
+            extraOptionsError = true;
+        } else {
+            this.setState({ mailToError: false });
+        }
+        if (this.state.event.resources.length > 35) {
+            this.setState({ resourceError: true });
+            extraOptionsError = true;
+        } else {
+            this.setState({ resourceError: false });
+        }
+        if (!this.state.event.priority ||  this.state.event.priority == '0' || this.state.event.priority == '1' || this.state.event.priority == '2' ||
+        this.state.event.priority == '3' || this.state.event.priority == '4' || this.state.event.priority == '5' ||
+        this.state.event.priority == '6' || this.state.event.priority == '7' || this.state.event.priority == '8' ||
+        this.state.event.priority == '9') {
+            this.setState({ priorityError: false });
+        } else {
+            this.setState({ priorityError: true });
+            extraOptionsError = true;
+        }
+
+
+
+
+        if (error || extraOptionsError) {
+            this.setState({ formError: true, color: 'red'});
             return;
         }
+        this.setState({ color: 'gray' })
         this.setState({ formError: false });
 
     let blob = new Blob([toIcsFile.icsText(this.state.event)], {type: "text/plain;charset=utf-8"});
@@ -183,12 +227,15 @@ class App extends Component {
     } else {
         this.setState({ nameError: false })
     }
+
+
+
     if (error) {
         this.setState({ formError: true });
         return;
     }
     this.setState({ formError: false });
-    
+
     let databody = this.state.user.username ? {...this.state.event, username: this.state.user.username} : this.state.event;
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
@@ -217,7 +264,7 @@ class App extends Component {
                   label='Event Title'
                   placeholder='Event Title (25 characters max)'
                   name='name'
-                  error={this.state.nameError ? {content: '25 characters max', pointing: 'below', } :null }
+                  error={this.state.nameError ? {content: '25 characters max. You have ' + this.state.event.name.length + ' characters.', pointing: 'below', } :null }
                   onChange={this.handleInputChange}
                 />
 
@@ -242,8 +289,10 @@ class App extends Component {
                   id='form-description'
                   control={TextArea}
                   label='Description'
-                  placeholder='Description (100 characters max)'
+                  placeholder='Description (50 characters max)'
                   name='description'
+                  error={this.state.descriptionError ? {content: '50 characters max. You have ' +
+                  this.state.event.description.length + ' characters.', pointing: 'below', } :null }
                   onChange={this.handleInputChange}
                 />
                 <div>
@@ -260,7 +309,7 @@ class App extends Component {
                 </Form>
                 </div>
             <div>
-        <Button size='medium' style={{ position: 'relative', top: '-100px',  width: '100%' }} onClick={this.closeConfigShow(false, true)}>
+        <Button size='medium' color={this.state.color} style={{ position: 'relative', top: '-100px',  width: '100%' }} onClick={this.closeConfigShow(false, true)}>
           Extra Options
         </Button>
                 <Modal
@@ -277,6 +326,7 @@ class App extends Component {
                         label='Priority'
                         placeholder='Enter a number (0-9)'
                         onChange={this.setPriorityData}
+                        error={this.state.priorityError ? {content: 'Enter a number from 1 - 9', pointing: 'below', } :null }
                         value={this.state.extraPriority}
                       />
                   <Form.Select
@@ -296,7 +346,9 @@ class App extends Component {
                         onChange={this.setResourceData}
                         value={this.state.extraResources}
                         control={Input}
-                        placeholder='Equipment/Resources to bring' />
+                        error={this.state.resourceError ? {content: '35 characters max. You have ' +
+                        this.state.event.resources.length + ' characters.', pointing: 'below', } : null }
+                        placeholder='Equipment/Resources to bring (35 characters max)' />
                       <Form.Group inline>
                         <Form.TextArea
                             label='Sent by'
@@ -304,6 +356,7 @@ class App extends Component {
                             onChange={this.setSentByData}
                             value={this.state.extraSentBy}
                             control={Input}
+                            error={this.state.sentByError ? {content: 'Must be an e-mail', pointing: 'below', } :null }
                             placeholder='joe@schmoe.com' />
                         <Form.TextArea
                             label='Mail to'
@@ -311,6 +364,7 @@ class App extends Component {
                             onChange={this.setMailTo}
                             value={this.state.extraMailTo}
                             control={Input}
+                            error={this.state.mailToError ? {content: 'Must be an e-mail', pointing: 'below', } :null }
                             placeholder='joe@schmoe.com' />
                          <Form.Checkbox
                             label='Request RSVP'
@@ -363,8 +417,6 @@ class App extends Component {
                     onClick={this.onSaveFile}
                     error={this.state.formError}
                 />
-                {this.state.formError ? <Message error header="Invalid input" /> :null
-                }
               </Form>
           </div>
           </div>
