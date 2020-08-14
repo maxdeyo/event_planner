@@ -122,12 +122,22 @@ class App extends Component {
             this.setState({ priorityError: true });
             extraOptionsError = true;
         }
+        // calendar error
+        if (this.state.event.dtstart > this.state.event.dtend) {
+            this.setState({ calendarError: true });
+            error = true;
+        } else {
+            this.setState({ calendarError: false })
+        }
 
-
-
-
-        if (error || extraOptionsError) {
-            this.setState({ formError: true, color: 'red'});
+        if (error && extraOptionsError) {
+            this.setState({ color: 'red', formError: true })
+            return;
+        } else if (extraOptionsError) {
+            this.setState({ color: 'red' })
+            return;
+        } else if (error) {
+            this.setState({ formError: true });
             return;
         }
         this.setState({ color: 'gray' })
@@ -257,7 +267,7 @@ class App extends Component {
                 <Header as='h1' textAlign='center'> Add an Event </Header>
             </Segment>
               <div class='form'>
-              <Form size='huge'>
+              <Form error size='huge'>
                 <Form.Field required
                   id='form-textarea-control-event'
                   control={Input}
@@ -269,10 +279,11 @@ class App extends Component {
                 />
 
                 <div class="calendar">
-                <Calendar 
+                <Calendar
                   handleStartChange={this.handleStartChange}
                   handleEndChange={this.handleEndChange}
                 />
+                { this.state.calendarError ? <Message error header='Start date must be before end date'/> :null }
                   </div>
                 <Form.Select
                      name='recurrence'
@@ -316,7 +327,7 @@ class App extends Component {
                   open={open}
                   closeOnEscape={closeOnEscape}
                   onClose={this.close}
-                  as={Form} >
+                  as={Form}>
 
                 <Modal.Header>Extra Options</Modal.Header>
                   <Modal.Content>
@@ -401,9 +412,6 @@ class App extends Component {
                   onClick={this.handleSubmit}
                   error={this.state.formError}
                 />
-                {this.state.formError ? <Message error header="Invalid name" /> :null
-
-                }
                 <Form.Button
                     id='form-button-control-public'
                     content='Download Event'
