@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Radio, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
+import { Form, Input, Checkbox, Radio, Modal, TextArea, Message, Segment, Button, Header } from 'semantic-ui-react'
 import TimeZones from './data/timezones.js';
 import Calendar from './components/Calendar.js';
 import NavBar from './components/NavBar.js';
@@ -91,10 +91,10 @@ class App extends Component {
         .catch( error => console.log(error));
   }
 
-
   handleCheckboxChange = () => {
-    let newRSVP = !(this.state.rsvp);
+    let newRSVP = !(this.state.event.rsvp);
     this.setState({event: {...this.state.event, rsvp: newRSVP}});
+    console.log(newRSVP);
   }
 
   handleInputChange = e => {
@@ -163,7 +163,6 @@ class App extends Component {
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
     this.setState({redirect: true});
-    this.clearForm();
  }
 
   render() {
@@ -173,7 +172,6 @@ class App extends Component {
         const { open, closeOnEscape } = this.state;
         const {value} = this.state;
         const {tzidvalue} = this.state;
-        let isChecked = this.state.rsvp;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -192,6 +190,7 @@ class App extends Component {
                   name='name'
                   onChange={this.handleInputChange}
                 />
+
                 <div class="calendar">
                 <Calendar 
                   handleStartChange={this.handleStartChange}
@@ -283,8 +282,12 @@ class App extends Component {
                             value={this.state.extraMailTo}
                             control={Input}
                             placeholder='joe@schmoe.com' />
-                       <Form.Checkbox label='Request RSVP'
-                       onSelect={this.handleCheckboxChange} checked={this.state.rsvp}/>
+                         <Form.Checkbox
+                            label='Request RSVP'
+                            name='rsvp'
+                            checked={this.state.event.rsvp}
+                            control={Checkbox}
+                            onChange={this.handleCheckboxChange} />
                             </Form.Group>
                   </Modal.Content>
                   <Modal.Actions>
