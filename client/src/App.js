@@ -44,7 +44,11 @@ class App extends Component {
       },
       isSignedIn: false,
       user: null,
-      redirect: false
+      redirect: false,
+      nameError: false,
+      emailError: false,
+      locationError: false,
+      formError: false
     }
     this.handleLocationSelect = this.handleLocationSelect.bind(this);
     this.setSentByData = this.setSentByData.bind(this);
@@ -70,6 +74,21 @@ class App extends Component {
   }
 
   onSaveFile() {
+        let error = false;
+        console.log(this.state.event.name.length);
+        let length = this.state.event.name.length;
+        if (length > 25) {
+            this.setState({ nameError: true });
+            error = true;
+        } else {
+            this.setState({ nameError: false })
+        }
+        if (error) {
+            this.setState({ formError: true });
+            return;
+        }
+        this.setState({ formError: false });
+
     let blob = new Blob([toIcsFile.icsText(this.state.event)], {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(blob, this.state.event.name + ".ics");
   }
@@ -155,6 +174,21 @@ class App extends Component {
 
   handleSubmit = (e) =>{
     e.preventDefault();
+    let error = false;
+    console.log(this.state.event.name.length);
+    let length = this.state.event.name.length;
+    if (length > 25) {
+        this.setState({ nameError: true });
+        error = true;
+    } else {
+        this.setState({ nameError: false })
+    }
+    if (error) {
+        this.setState({ formError: true });
+        return;
+    }
+    this.setState({ formError: false });
+    
     let databody = this.state.user.username ? {...this.state.event, username: this.state.user.username} : this.state.event;
     const headers = { 'Content-Type': 'application/json' };
     axios.post('/api/events/save', databody, { headers });
@@ -167,7 +201,6 @@ class App extends Component {
     }
         const { open, closeOnEscape } = this.state;
         const {value} = this.state;
-        const {tzidvalue} = this.state;
     return (
       <div className="App">
         {/* Render the data if we have it */}
@@ -184,6 +217,7 @@ class App extends Component {
                   label='Event Title'
                   placeholder='Event Title (25 characters max)'
                   name='name'
+                  error={this.state.nameError ? {content: '25 characters max', pointing: 'below', } :null }
                   onChange={this.handleInputChange}
                 />
 
@@ -311,7 +345,11 @@ class App extends Component {
                   || !this.state.isSignedIn
                   }
                   onClick={this.handleSubmit}
+                  error={this.state.formError}
                 />
+                {this.state.formError ? <Message error header="Invalid name" /> :null
+
+                }
                 <Form.Button
                     id='form-button-control-public'
                     content='Download Event'
@@ -323,7 +361,10 @@ class App extends Component {
                     || !this.state.event.dtend
                     }
                     onClick={this.onSaveFile}
+                    error={this.state.formError}
                 />
+                {this.state.formError ? <Message error header="Invalid input" /> :null
+                }
               </Form>
           </div>
           </div>
